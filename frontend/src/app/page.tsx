@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import LoginButton from './components/LoginButton'
 import { useRouter } from 'next/navigation';
+import WhiteButton from './components/WhiteButton';
 
 
 export default function Home() {
@@ -22,7 +23,18 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+    <div className="flex flex-col w-full items-start justify-center min-h-screen">
+      {/* Background Poster */}
+      <div className='relative w-full h-[660px] mb-8'>
+        <img 
+          src={`/images/horizontal_poster.png`} 
+          alt="bg poster" 
+          className='flex w-full h-full object-cover'
+        />
+        <div className='absolute bottom-0 left-0 flex items-center justify-center mx-4 my-4 gap-4'>
+          <WhiteButton icon="document" text="영화 상세 페이지" />
+        </div>
+      </div>
       <h1 className="text-2xl font-bold mb-4">영화 줄거리 요약기</h1>
       <LoginButton />
       <p className="mb-4">영화 줄거리를 입력하면 요약해 드립니다.</p>

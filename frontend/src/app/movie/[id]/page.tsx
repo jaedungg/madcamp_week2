@@ -13,7 +13,7 @@ const MovieDetailPage = () => {
   };
 
   return (
-    <div>
+    <div className='pt-20 px-4'>
       <h1>Movie ID: {id}</h1>
       <button onClick={() => handleStartComic(1)}>1단계 요약 보기</button>
     </div>

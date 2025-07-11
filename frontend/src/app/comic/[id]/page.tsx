@@ -10,7 +10,7 @@ export default function ComicPage() {
   const step = searchParams ? searchParams.get('step') : null;
 
   return (
-    <div>
+    <div className='pt-20 px-4'>
       <h1>Comic ID: {id}</h1>
       <p>Step: {step}</p>
     </div>
