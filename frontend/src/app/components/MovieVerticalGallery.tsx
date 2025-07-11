@@ -10,7 +10,7 @@ export default function MovieVerticalView({ movieIds }: MovieVerticalViewProps) 
       <div className="flex gap-4 py-4 w-max">
         {movieIds.map((id) => (
           <img
-            key={id}
+            // key={id}
             src={`/images/movie_${id}.png`}
             alt={`Poster for movie ${id}`}
             className="h-[360px] flex-shrink-0 object-cover rounded"

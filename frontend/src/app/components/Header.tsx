@@ -32,7 +32,7 @@ export default function Header() {
       {/* 왼쪽 메뉴 */}
       <div className="flex items-center gap-4 text-lg">
         <div className="flex items-center gap-2 px-2 cursor-pointer" onClick={() => move2Home()}>          
-          <img src="/images/logo.svg" alt="Globe Icon" width={32} height={32} />
+          <img src="/icons/logo.svg" alt="Globe Icon" width={32} height={32} />
           <p className="text-2xl cursor-pointer">ReelRecap</p>
         </div>
         <p className={`cursor-pointer ${(pathname == '/') ? "font-bold" : ""}`} onClick={() => move2Home()}>Home</p>
@@ -53,7 +53,7 @@ export default function Header() {
               className="px-2 border rounded"
             /> 
           )}
-          <img className="cursor-pointer" src="/images/search.svg" alt="Globe Icon" width={32} height={32} onClick={toggleSearch}/>
+          <img className="cursor-pointer" src="/icons/search.svg" alt="Globe Icon" width={32} height={32} onClick={toggleSearch}/>
         </div>
         {/* 프로필 원 */}
         <img className="cursor-pointer rounded-full " src="/images/profile.png" alt="Globe Icon" width={32} height={32} />
