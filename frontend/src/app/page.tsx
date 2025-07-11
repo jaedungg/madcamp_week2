@@ -5,6 +5,7 @@ import axios from 'axios';
 import LoginButton from './components/LoginButton'
 import { useRouter } from 'next/navigation';
 import WhiteButton from './components/WhiteButton';
+import MovieVerticalView from './components/\bMovieVerticalGallery';
 
 
 export default function Home() {
@@ -35,6 +36,18 @@ export default function Home() {
           <WhiteButton icon="document" text="영화 상세 페이지" />
         </div>
       </div>
+
+      {/* Title & Movie gallery view */}
+      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
+        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <p className="left-[35px] top-0 text-xl text-left text-white">
+            마음에 쏙 드실 거예요
+          </p>
+        </div>
+        <MovieVerticalView movieIds={[0,0,0,0,0,0,0,0,0]} />
+      </div>
+      
       <h1 className="text-2xl font-bold mb-4">영화 줄거리 요약기</h1>
       <LoginButton />
       <p className="mb-4">영화 줄거리를 입력하면 요약해 드립니다.</p>

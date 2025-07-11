@@ -50,7 +50,7 @@ export default function Header() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="검색어를 입력하세요"
-              className="px-2 py-1 border rounded"
+              className="px-2 border rounded"
             /> 
           )}
           <img className="cursor-pointer" src="/images/search.svg" alt="Globe Icon" width={32} height={32} onClick={toggleSearch}/>
