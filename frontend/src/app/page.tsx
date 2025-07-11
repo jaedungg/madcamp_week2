@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import LoginButton from './components/LoginButton'
 
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
       <h1 className="text-2xl font-bold mb-4">영화 줄거리 요약기</h1>
+      <LoginButton />
       <p className="mb-4">영화 줄거리를 입력하면 요약해 드립니다.</p>
       <p className="mb-4">예시: "어벤져스: 엔드게임은 지구를 구하기 위한 어벤져스의 마지막 전투를 그린 영화입니다."</p>
       <p className="mb-4">줄거리를 입력하고 "요약하기" 버튼을 클릭하세요.</p>
