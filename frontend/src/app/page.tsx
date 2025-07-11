@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import LoginButton from './components/LoginButton'
+import { useRouter } from 'next/navigation';
 
 
 export default function Home() {
@@ -12,6 +13,12 @@ export default function Home() {
   const generate = async () => {
     const res = await axios.post('http://localhost:5000/api/summarize', { text: story });
     setResult(res.data.summary);
+  };
+
+  const router = useRouter();
+
+  const goToDetail = () => {
+    router.push(`/movie/11`);
   };
 
   return (
@@ -24,6 +31,10 @@ export default function Home() {
       <p className="mb-4">요약 결과는 아래에 표시됩니다.</p>
       <p className="mb-4">이 기능은 영화 줄거리 요약을 위해 개발되었습니다.</p>
       <textarea value={story} onChange={(e) => setStory(e.target.value)} />
+      <div onClick={goToDetail}>
+        <img src={"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"} />
+        <h3>요약하기</h3>
+      </div>
       <button onClick={generate}>요약하기</button>
       {result && <p>요약 결과: {result}</p>}
     </div>
