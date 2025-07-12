@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import axios from 'axios';
-import LoginButton from './components/LoginButton'
 import { useRouter, redirect } from 'next/navigation';
 import RectangleButton from './components/RectangleButton';
 import MovieVerticalView from './components/MovieVerticalGallery';
@@ -41,7 +40,6 @@ export default function Home() {
         </div>
         <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
       </div>
-      <LoginButton />
       {session ? (
         <div>
           <p className="text-lg font-semibold mb-2">현재 로그인: </p>

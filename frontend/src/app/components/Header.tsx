@@ -1,8 +1,12 @@
 'use client';
+import { useSession, signOut } from 'next-auth/react'
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Header() {
+    const { data: session, status } = useSession()
+    const { user } = session || {};
+
     const router = useRouter();
     const pathname = usePathname();
 
@@ -56,7 +60,10 @@ export default function Header() {
           <img className="cursor-pointer" src="/icons/search.svg" alt="Globe Icon" width={32} height={32} onClick={toggleSearch}/>
         </div>
         {/* 프로필 원 */}
-        <img className="cursor-pointer rounded-full " src="/images/profile.png" alt="Globe Icon" width={32} height={32} />
+        <img 
+          className="cursor-pointer rounded-full " 
+          src={user?.image ?? "/images/profile.png"}
+          alt="Profile image" width={32} height={32} />
       </div>
     </header>
   );
