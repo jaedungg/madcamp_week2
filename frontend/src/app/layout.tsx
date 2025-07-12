@@ -28,13 +28,14 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <SessionProviderWrapper>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
 
-        <SessionProviderWrapper>
-          {children}
-        </SessionProviderWrapper>
+        
+          
+        
 
         <div className="flex flex-col w-full min-h-screen">
           {showHeader && <Header />}
@@ -42,6 +43,7 @@ export default function RootLayout({
         </div>
 
       </body>
+      </SessionProviderWrapper>
     </html>
   );
 }

@@ -50,32 +50,12 @@ export default function Home() {
             마음에 쏙 드실 거예요
           </p>
         </div>
-        <MovieVerticalView movieIds={[0,0,0,0,0,0,0,0,0]} />
+        <MovieVerticalView movieIds={[9,8,7,6,5,4,3,2,1]} />
       </div>
       
       <h1 className="text-2xl font-bold mb-4">영화 줄거리 요약기</h1>
       <LoginButton />
       <UserProfile />
-      {session ? (
-        <p className="text-lg font-semibold mb-2">현재 로그인: {session?.user?.name}</p>
-      ) : (
-        <p className="text-sm text-gray-500 mb-2">❌ 로그인되지 않았습니다.</p>
-      )}
-      <p className="mb-4">영화 줄거리를 입력하면 요약해 드립니다.</p>
-      <p className="mb-4">예시: "어벤져스: 엔드게임은 지구를 구하기 위한 어벤져스의 마지막 전투를 그린 영화입니다."</p>
-      <p className="mb-4">줄거리를 입력하고 "요약하기" 버튼을 클릭하세요.</p>
-      <p className="mb-4">요약 결과는 아래에 표시됩니다.</p>
-      <p className="mb-4">이 기능은 영화 줄거리 요약을 위해 개발되었습니다.</p>
-      <textarea value={story} onChange={(e) => setStory(e.target.value)} className="w-full max-w-md h-32 p-2 border rounded" />
-      <button onClick={generate} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">요약하기</button>
-      {result && <p className="mt-4">요약 결과: {result}</p>}
-      <textarea value={story} onChange={(e) => setStory(e.target.value)} />
-      <div onClick={goToDetail}>
-        <img src={"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"} />
-        <h3>요약하기</h3>
-      </div>
-      <button onClick={generate}>요약하기</button>
-      {result && <p>요약 결과: {result}</p>}
     </div>
   );
 }
