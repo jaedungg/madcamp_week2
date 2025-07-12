@@ -2,7 +2,8 @@
 
 import RectangleButton from '@/app/components/RectangleButton';
 import RoundButton from '@/app/components/RoundButton';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, redirect } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const MovieDetailPage = () => {
   const params = useParams();
