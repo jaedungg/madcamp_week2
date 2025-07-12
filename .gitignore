@@ -3,6 +3,7 @@
 
 # 환경 변수
 .env
+.env.local
 frontend/.env
 backend/.env
 

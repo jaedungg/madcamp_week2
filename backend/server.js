@@ -10,6 +10,7 @@ import movieRoutes from './routes/movie.routes.js';
 // import userRoutes from './routes/user.routes.js';
 
 dotenv.config();
+dotenv.config({ path: './.env.local' });
 
 const app = express();
 
