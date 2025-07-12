@@ -8,6 +8,7 @@ type RectangleButtonProps = {
 const RectangleButton = ({ icon, text, onClick, transparent }: RectangleButtonProps) => {
   return (
     <div 
+      onClick={onClick}
       className={`inline-flex justify-center items-center flex-grow-0 flex-shrink-0 h-[48px] gap-2 px-4 py-2 rounded 
       ${transparent ? 'bg-white/40 text-white' : 'bg-white text-black'}
       hover:opacity-80 transition-opacity cursor-pointer`}

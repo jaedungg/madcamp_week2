@@ -7,6 +7,7 @@ import RectangleButton from './components/RectangleButton';
 import MovieVerticalView from './components/MovieVerticalGallery';
 import UserProfile from './components/UserProfile';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -26,7 +27,9 @@ export default function Home() {
           className='flex w-full h-full object-cover'
         />
         <div className='absolute bottom-0 left-0 flex items-center justify-center mx-4 my-4 gap-4'>
-          <RectangleButton icon="document" text="영화 상세 페이지" />
+          <Link href="/movie/unknown">
+            <RectangleButton icon="document" text="영화 상세 페이지" />
+          </Link>
         </div>
       </div>
 

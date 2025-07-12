@@ -4,15 +4,26 @@ import RectangleButton from '@/app/components/RectangleButton';
 import RoundButton from '@/app/components/RoundButton';
 import { useParams, useRouter, redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 
 const MovieDetailPage = () => {
   const params = useParams();
   const id = params?.id ?? 'unknown';
 
   const router = useRouter();
+  const [showSummarySteps, setShowSummarySteps] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedStep, setSelectedStep] = useState<number | null>(null);
+  const [selectedStepId, setSelectedStepId] = useState<number | null>(null);
 
-  const handleStartComic = (step: number) => {
-    router.push(`/comic/${id}?step=${step}`);
+  useEffect(() => {
+    console.log('📌 selectedStepId:', selectedStepId);
+  }, [selectedStepId]);
+
+  const handleSelectStep = (step: number) => {
+    setSelectedStep(step);
+    setSelectedStepId(step);
+    setDropdownOpen(false);
   };
 
   return (
@@ -81,15 +92,62 @@ const MovieDetailPage = () => {
         </div>    
       </div>
       
-      <div className="flex justify-center items-center h-[54px] w-[200px] gap-3 px-5 py-2.5 rounded bg-white/40 border-2 border-white/70">
-        <p className="flex-grow-0 flex-shrink-0 text-[26px] font-medium text-left text-white">
-          요약 단계
-        </p>
+      <div className="relative mt-2 h-[54px] mb-2">
+        <div
+          className="flex justify-center items-center h-[54px] w-fit gap-3 px-5 py-2.5 rounded bg-white/40 border-2 border-white/70 cursor-pointer"
+          onClick={() => setDropdownOpen((prev) => !prev)}
+        >
+          <p className="text-[26px] font-medium text-white">
+            {selectedStep === 1
+              ? '1단계 (5컷 만화)'
+              : selectedStep === 2
+              ? '2단계 (10컷 만화)'
+              : '요약 단계'}
+          </p>
+          <svg
+            width={20}
+            height={20}
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {dropdownOpen ? (
+              <path d="M0.833344 17.5H19.1667L10 1.66667" fill="white" />
+            ) : (
+              <path d="M0.833344 2.5L19.1667 2.5L10 18.3333" fill="white" />
+            )}
+          </svg>
+        </div>
+
+        {dropdownOpen && (
+          <div className="flex flex-col justify-center items-center w-[232px] h-[94px] absolute top-[60px] left-0 py-2.5 rounded border-2 border-white/70 z-50" style={{ backgroundColor: 'rgb(102, 102, 102)' }}>
+            <div className="w-full h-[47px] flex items-center justify-center cursor-pointer hover:bg-[rgb(146,146,146)] transition-colors duration-200" onClick={() => handleSelectStep(1)}>
+              <p className="text-[26px] font-medium text-center text-white">
+                1단계{" "}
+                <span className="text-xl font-medium text-white">(5컷 만화)</span>
+              </p>
+            </div>
+            <div className="w-full h-[47px] flex items-center justify-center cursor-pointer hover:bg-[rgb(146,146,146)] transition-colors duration-200" onClick={() => handleSelectStep(2)}>
+              <p className="text-[26px] font-medium text-center text-white">
+                2단계{" "}
+                <span className="text-xl font-medium text-white">(10컷 만화)</span>
+              </p>
+            </div>
+          </div>
+        )}
       </div>
       <div className='flex flex-row items-center gap-4 mb-4'>
         {/* <RectangleButton icon="headset" text="줄거리 듣기" />  <RectangleButton icon="information" text="상세 정보 보기" transparent={true} /> <RoundButton icon="information"/> */}
         <RectangleButton icon="headset" text="줄거리 듣기" />
-        <RectangleButton icon="comics" text="요약 만화 보기" />
+        <RectangleButton
+          icon="comics"
+          text="요약 만화 보기"
+          onClick={() => {
+            if (selectedStepId !== null) {
+              router.push(`/comic/${id}?step=${selectedStepId}`);
+            }
+          }}
+        />
       </div>
     </div>
   );
