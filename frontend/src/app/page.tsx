@@ -53,9 +53,10 @@ export default function Home() {
         <MovieVerticalView movieIds={[9,8,7,6,5,4,3,2,1]} />
       </div>
       
-      <h1 className="text-2xl font-bold mb-4">영화 줄거리 요약기</h1>
+      <h1 className="text-2xl font-bold mb-40">영화 줄거리 요약기</h1>
       <LoginButton />
       <UserProfile />
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   );
 }
