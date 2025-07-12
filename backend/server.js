@@ -5,23 +5,24 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// ✅ app 객체는 먼저 선언해야 합니다
+// app 객체는 먼저 선언해야 합니다
 const app = express();
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
 
-// ✅ 미들웨어 등록은 app 선언 이후에 해야 합니다
+// 미들웨어 등록
 app.use(cors());
 app.use(express.json());
 
-// ✅ Swagger UI 연결
+// Swagger UI 연결
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// ✅ API 라우트 등록
-app.use('/api/users', require('./routes/user.routes'));
+// API 라우트 등록
+app.use('/api/comics', require('./routes/comic.routes'));
+// app.use('/api/users', require('./routes/user.routes'));
 
-// ✅ MongoDB 연결 및 서버 실행
+// MongoDB 연결 및 서버 실행
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(5050, () => {
