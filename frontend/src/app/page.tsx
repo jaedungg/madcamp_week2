@@ -6,6 +6,9 @@ import LoginButton from './components/LoginButton'
 import UserProfile from './components/UserProfile';
 import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import WhiteButton from './components/WhiteButton';
+import MovieVerticalView from './components/\bMovieVerticalGallery';
 
 
 export default function Home() {
@@ -19,8 +22,37 @@ export default function Home() {
     setResult(res.data.summary);
   };
 
+  const router = useRouter();
+
+  const goToDetail = () => {
+    router.push(`/movie/11`);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+    <div className="flex flex-col w-full items-start justify-center min-h-screen">
+      {/* Background Poster */}
+      <div className='relative w-full h-[660px] mb-8'>
+        <img 
+          src={`/images/horizontal_poster.png`} 
+          alt="bg poster" 
+          className='flex w-full h-full object-cover'
+        />
+        <div className='absolute bottom-0 left-0 flex items-center justify-center mx-4 my-4 gap-4'>
+          <WhiteButton icon="document" text="영화 상세 페이지" />
+        </div>
+      </div>
+
+      {/* Title & Movie gallery view */}
+      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
+        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <p className="left-[35px] top-0 text-xl text-left text-white">
+            마음에 쏙 드실 거예요
+          </p>
+        </div>
+        <MovieVerticalView movieIds={[0,0,0,0,0,0,0,0,0]} />
+      </div>
+      
       <h1 className="text-2xl font-bold mb-4">영화 줄거리 요약기</h1>
       <LoginButton />
       <UserProfile />
@@ -38,6 +70,10 @@ export default function Home() {
       <button onClick={generate} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">요약하기</button>
       {result && <p className="mt-4">요약 결과: {result}</p>}
       <textarea value={story} onChange={(e) => setStory(e.target.value)} />
+      <div onClick={goToDetail}>
+        <img src={"https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"} />
+        <h3>요약하기</h3>
+      </div>
       <button onClick={generate}>요약하기</button>
       {result && <p>요약 결과: {result}</p>}
     </div>
