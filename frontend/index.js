@@ -1,6 +1,6 @@
 // 예: frontend/pages/index.js
 import { useSession, signIn, signOut } from "next-auth/react";
-
+햣
 export default function Home() {
   const { data: session } = useSession();
 
