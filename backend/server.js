@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger.js';
 import comicRoutes from './routes/comic.routes.js';
+import movieRoutes from './routes/movie.routes.js';
 // import userRoutes from './routes/user.routes.js';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
+app.use('/api/movies', movieRoutes);
 app.use('/api/comics', comicRoutes);
 // app.use('/api/users', userRoutes);
 
