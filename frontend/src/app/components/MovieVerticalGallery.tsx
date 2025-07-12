@@ -8,7 +8,7 @@ export default function MovieVerticalView({ movieIds }: MovieVerticalViewProps) 
   return (
     <div className="w-full overflow-x-auto">
       <div className="flex gap-4 py-4 w-max">
-        {movieIds.map((id) => (
+        {movieIds.map((id, index) => (
           <img
             key={id}
             // src={`/images/movie_${id}.png`}
