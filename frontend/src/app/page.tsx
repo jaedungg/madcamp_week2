@@ -3,30 +3,19 @@
 import { useState } from 'react';
 import axios from 'axios';
 import LoginButton from './components/LoginButton'
-import { useRouter } from 'next/navigation';
+import { useRouter, redirect } from 'next/navigation';
 import RectangleButton from './components/RectangleButton';
 import MovieVerticalView from './components/MovieVerticalGallery';
 import UserProfile from './components/UserProfile';
-import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 
-
 export default function Home() {
-  const [story, setStory] = useState('');
-  const [result, setResult] = useState('');
   const { data: session } = useSession();
   console.log("현재 세션:", session);
 
-  const generate = async () => {
-    const res = await axios.post('http://localhost:5000/api/summarize', { text: story });
-    setResult(res.data.summary);
-  };
-
-  const router = useRouter();
-
-  const goToDetail = () => {
-    router.push(`/movie/11`);
-  };
+  if (!session) {
+    redirect('/login');
+  }
 
   return (
     <div className="flex flex-col w-full items-start justify-center min-h-screen">
@@ -52,8 +41,6 @@ export default function Home() {
         </div>
         <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
       </div>
-
-      <h1 className="text-2xl font-bold mb-4">영화 줄거리 요약기</h1>
       <LoginButton />
       {session ? (
         <div>
@@ -63,6 +50,7 @@ export default function Home() {
       ) : (
         <p className="text-sm text-gray-500 mb-2">❌ 로그인되지 않았습니다.</p>
       )}
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   );
 }
