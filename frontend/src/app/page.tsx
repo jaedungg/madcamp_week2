@@ -43,6 +43,24 @@ export default function Home() {
         </div>
         <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
       </div>
+      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
+        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <p className="left-[35px] top-0 text-xl text-left text-white">
+            최근 본 작품
+          </p>
+        </div>
+        <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
+      </div>
+      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
+        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <p className="left-[35px] top-0 text-xl text-left text-white">
+            마음에 쏙 드실 거예요
+          </p>
+        </div>
+        <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
+      </div>
       {session ? (
         <div>
           <p className="text-lg font-semibold mb-2">현재 로그인: </p>

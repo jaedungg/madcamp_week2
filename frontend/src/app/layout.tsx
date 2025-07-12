@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const showHeader = pathname !== '/login';
+  const showHeader = pathname !== '/login' && !(pathname?.startsWith('/comic/'));
 
   return (
     <html lang="en">
