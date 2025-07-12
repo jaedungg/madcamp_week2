@@ -55,4 +55,10 @@ const ComicStepSchema = new mongoose.Schema({
 const Comic = mongoose.models.Comic || mongoose.model('Comic', ComicSchema);
 const ComicStep = mongoose.models.ComicStep || mongoose.model('ComicStep', ComicStepSchema);
 
-export default { Comic, ComicStep };
+export default {
+  Comic,
+  ComicStep,
+  // User,
+  // Comment,
+  // Movie
+};

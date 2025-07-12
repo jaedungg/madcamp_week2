@@ -1,28 +1,27 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
+// server.js
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger.js';
+import comicRoutes from './routes/comic.routes.js';
+// import userRoutes from './routes/user.routes.js';
 
 dotenv.config();
 
-// app 객체는 먼저 선언해야 합니다
 const app = express();
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swagger');
-
-// 미들웨어 등록
 app.use(cors());
 app.use(express.json());
 
-// Swagger UI 연결
+// Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// API 라우트 등록
-app.use('/api/comics', require('./routes/comic.routes'));
-// app.use('/api/users', require('./routes/user.routes'));
+// Routes
+app.use('/api/comics', comicRoutes);
+// app.use('/api/users', userRoutes);
 
-// MongoDB 연결 및 서버 실행
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(5050, () => {

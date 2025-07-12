@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const comicController = require('../controllers/comic.controller');
+import comicController from '../controllers/comic.controller.js';
+
 
 /**
  * @swagger
@@ -56,6 +57,107 @@ const comicController = require('../controllers/comic.controller');
  *         description: 서버 오류
  */
 
+/**
+ * @swagger
+ * /api/comics/{comicId}:
+ *   get:
+ *     summary: 특정 만화 상세 조회 (ComicSteps 포함)
+ *     tags: [Comics]
+ *     parameters:
+ *       - in: path
+ *         name: comicId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 만화 ID (MongoDB ObjectId)
+ *     responses:
+ *       200:
+ *         description: Comic 객체 반환
+ *       404:
+ *         description: 해당 만화를 찾을 수 없음
+ */
+
+/**
+ * @swagger
+ * /api/comics:
+ *   post:
+ *     summary: 새 만화 생성
+ *     tags: [Comics]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - movieId
+ *               - type
+ *             properties:
+ *               movieId:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *                 enum: [summary, parody]
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: 생성된 Comic 객체 반환
+ *       400:
+ *         description: 잘못된 요청
+ */
+
+/**
+ * @swagger
+ * /api/comics/{comicId}/steps:
+ *   post:
+ *     summary: 특정 만화에 ComicStep 추가
+ *     tags: [Comics]
+ *     parameters:
+ *       - in: path
+ *         name: comicId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 만화 ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - stepNumber
+ *               - imageUrl
+ *               - text
+ *             properties:
+ *               stepNumber:
+ *                 type: number
+ *               imageUrl:
+ *                 type: string
+ *               text:
+ *                 type: string
+ *               audioUrl:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Step 추가 완료된 Comic 반환
+ *       400:
+ *         description: 요청 에러
+ */
+
+// GET /api/comics
 router.get('/', comicController.getComicsByMovieId);
 
-module.exports = router;
+// GET /api/comics/:comicId
+router.get('/:comicId', comicController.getComicById);
+
+// POST /api/comics
+router.post('/', comicController.createComic);
+
+// POST /api/comics/:comicId/steps
+router.post('/:comicId/steps', comicController.addStepToComic);
+
+export default router;
