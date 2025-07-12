@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import { usePathname } from 'next/navigation';
+import SessionProviderWrapper from "./SessionProviderWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +27,16 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
-      >
-        <div className="flex flex-col w-full min-h-screen">
-          {showHeader && <Header />}
-          {children}
-        </div>
-      </body>
+      <SessionProviderWrapper>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        >
+          <div className="flex flex-col w-full min-h-screen">
+            {showHeader && <Header />}
+            {children}
+          </div>
+        </body>
+      </SessionProviderWrapper>
     </html>
   );
 }
