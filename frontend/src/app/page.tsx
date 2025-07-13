@@ -13,9 +13,9 @@ export default function Home() {
   const { data: session } = useSession();
   console.log("현재 세션:", session);
 
-  if (!session) {
-    redirect('/login');
-  }
+  // if (!session) {
+  //   redirect('/login');
+  // }
 
   return (
     <div className="flex flex-col w-full items-start justify-center min-h-screen">

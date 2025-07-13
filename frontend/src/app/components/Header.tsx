@@ -61,10 +61,12 @@ export default function Header() {
           <img className="cursor-pointer" src="/icons/search.svg" alt="Globe Icon" width={32} height={32} onClick={toggleSearch}/>
         </div>
         {/* 프로필 원 */}
-        <img 
-          className="cursor-pointer rounded-full " 
-          src={user?.image ?? "/images/profile.png"}
-          alt="Profile image" width={32} height={32} />
+        <div onClick={() => router.push('/profile')}>
+          <img 
+            className="cursor-pointer rounded-full" 
+            src={user?.image ?? "/images/profile.png"}
+            alt="Profile image" width={32} height={32} />
+        </div>
       </div>
     </header>
   );
