@@ -31,6 +31,7 @@ const getMyProfile = async (req, res) => {
       email,
       nickname,
       profileImage,
+      bannerImage,
       favoriteGenres,
       likedMovies,
       language,
@@ -62,6 +63,7 @@ const getUserProfile = async (req, res) => {
     res.json({
       nickname: user.nickname,
       profileImage: user.profileImagem,
+      bannerImage: user.bannerImage,
       favoriteGenres: user.favoriteGenres,
       likedMovies: user.likedMovies.map(movie => movie.title), // ObjectId를 문자열로 변환
     });

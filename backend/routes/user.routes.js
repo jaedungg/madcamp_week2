@@ -59,6 +59,8 @@ import userController from "../controllers/user.controller.js";
  *                   type: string 
  *                 profileImage:
  *                   type: string
+ *                 bannerImage:
+ *                   type: string
  *                 favoriteGenres:
  *                   type: array
  *                   items:
@@ -99,6 +101,8 @@ import userController from "../controllers/user.controller.js";
  *                 nickname:
  *                   type: string
  *                 profileImage:
+ *                   type: string
+ *                 bannerImage:
  *                   type: string
  *                 favoriteGenres:
  *                   type: array
@@ -163,6 +167,8 @@ import userController from "../controllers/user.controller.js";
  *               nickname:
  *                 type: string
  *               profileImage:
+ *                 type: string
+ *               bannerImage:
  *                 type: string
  *               favoriteGenres:
  *                 type: array

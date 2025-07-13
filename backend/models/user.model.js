@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
   nickname: { type: String },
   googleId: { type: String },
   profileImage: { type: String },
+  bannerImage: { type: String }, 
   favoriteGenres: [{ type: String }], // 예: ["Action", "Drama"]
   likedMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }],
   isAdmin: { type: Boolean, default: false },
