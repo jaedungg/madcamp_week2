@@ -68,6 +68,9 @@ const addStepToComic = async (req, res) => {
     const comic = await Comic.findById(req.params.comicId);
     if (!comic) return res.status(404).json({ message: 'Comic not found' });
 
+    if (!comic.steps) {
+      comic.steps = [];
+    }
     comic.steps.push({ stepNumber, imageUrl, text, audioUrl });
     await comic.save();
     res.status(201).json(comic);

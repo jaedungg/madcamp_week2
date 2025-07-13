@@ -37,6 +37,7 @@ const ComicSchema = new mongoose.Schema({
   description: { type: String },  // 간략 설명
   language: { type: String, default: 'ko' },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // 만든 유저 (선택)
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
 }, { timestamps: true });
 
 const ComicStepSchema = new mongoose.Schema({

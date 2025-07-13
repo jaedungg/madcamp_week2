@@ -8,6 +8,7 @@ import swaggerSpec from './swagger.js';
 import userRoutes from './routes/user.routes.js';
 import comicRoutes from './routes/comic.routes.js';
 import movieRoutes from './routes/movie.routes.js';
+import commentRoutes from './routes/comment.routes.js';
 
 dotenv.config();
 dotenv.config({ path: './.env.local' });
@@ -24,6 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/users', userRoutes)
 app.use('/api/movies', movieRoutes);
 app.use('/api/comics', comicRoutes);
+app.use('/api/comics', commentRoutes); // ✅ 변경됨!
 // app.use('/api/users', userRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
