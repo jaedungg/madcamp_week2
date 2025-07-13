@@ -1,7 +1,7 @@
-// middleware/verifyJWT.js
+// middleware/authMiddleware.js
 import jwt from "jsonwebtoken";
 
-export const verifyJWT = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("Bearer ")) {
     console.warn("❌ JWT 인증 헤더 없음");
