@@ -5,9 +5,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger.js';
+import userRoutes from './routes/user.routes.js';
 import comicRoutes from './routes/comic.routes.js';
 import movieRoutes from './routes/movie.routes.js';
-// import userRoutes from './routes/user.routes.js';
 
 dotenv.config();
 dotenv.config({ path: './.env.local' });
@@ -21,6 +21,7 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
+app.use('/api/users', userRoutes)
 app.use('/api/movies', movieRoutes);
 app.use('/api/comics', comicRoutes);
 // app.use('/api/users', userRoutes);

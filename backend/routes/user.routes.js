@@ -1,62 +1,55 @@
-// /**
-//  * @swagger
-//  * tags:
-//  *   name: Users
-//  *   description: 유저 관리 API
-//  */
+import express from "express";
+import { verifyJWT } from "../middleware/verifyJWT.js";
+import userController from "../controllers/user.controller.js";
 
-// /**
-//  * @swagger
-//  * /api/users:
-//  *   get:
-//  *     summary: 모든 유저 조회
-//  *     tags: [Users]
-//  *     responses:
-//  *       200:
-//  *         description: 유저 목록 반환
-//  */
+/** @swagger
+ * tags:
+ *   name: Users
+ *   description: 사용자 관련 API
+ */
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: 현재 사용자 정보 조회
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 현재 사용자 정보
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id: 
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 nickname:
+ *                   type: string 
+ *                 profileImage:
+ *                   type: string
+ *                 favoriteGenres:
+ *                   type: array
+ *                   items:
+ *                     type: string 
+ *                 likedMovies:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *       401:
+ *         description: 인증되지 않은 요청
+ *       404:
+ *         description: 사용자 정보를 찾을 수 없음
+ *       500:
+ *         description: 서버 오류
+ */ 
 
-// /**
-//  * @swagger
-//  * /api/users:
-//  *   post:
-//  *     summary: 유저 생성
-//  *     tags: [Users]
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             type: object
-//  *             required:
-//  *               - name
-//  *               - email
-//  *             properties:
-//  *               name:
-//  *                 type: string
-//  *               email:
-//  *                 type: string
-//  *               favoriteGenres:
-//  *                 type: array
-//  *                 items:
-//  *                   type: string
-//  *     responses:
-//  *       201:
-//  *         description: 생성된 유저 반환
-//  */
 
-// const express = require('express');
-// const router = express.Router();
+const router = express.Router();
 
-// const userController = require('../controllers/user.controller');
+router.get("/me", verifyJWT, userController.getUserById);
 
-// // 유저 생성
-// router.post('/', userController.createUser);
-
-// // 유저 전체 조회
-// router.get('/', userController.getUsers);
-
-// // 유저 개별 조회
-// router.get('/:id', userController.getUserById);
-
-// module.exports = router;  // ✅ 반드시 이 줄이 있어야 합니다!
+export default router;
