@@ -1,29 +1,79 @@
-
-
-
 'use client';
 
 import MovieVerticalGallery from '../components/MovieVerticalGallery';
+import { useSession, signOut } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 
 export default function ProfilePage() {
+  const { data: session } = useSession();
+  const [coverImage, setCoverImage] = useState<string>('/rectangle-22.png');
+
+  const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setCoverImage(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div className="w-[1280px] h-[832px] relative overflow-hidden bg-black mx-auto">
+    <div className="w-full h-[832px] relative overflow-hidden bg-black mx-auto px-4">
+      <label className="cursor-pointer">
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleCoverImageChange}
+        />
+        <img
+          src={coverImage}
+          className="w-full max-w-[1217px] h-[165px] absolute left-1/2 -translate-x-1/2 top-[31px] rounded-2xl object-cover"
+          alt="Cover"
+        />
+      </label>
+      {/* Logout button at bottom-right of cover image area */}
+      <div className="absolute right-[40px] top-[210px] pt-1">
+        <button
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="w-[82px] h-7 relative rounded-lg bg-white/[0.33] border border-white/[0.51] cursor-pointer hover:bg-white/50 transition p-1"
+        >
+          <p className="absolute left-[26px] top-[7px] text-xs font-medium text-left text-[#c2bfbf]">
+            로그아웃
+          </p>
+          <svg
+            width={12}
+            height={12}
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-3 h-3 absolute left-2.5 top-2"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M2.5 10.5C2.225 10.5 1.98967 10.4022 1.794 10.2065C1.59833 10.0108 1.50033 9.77533 1.5 9.5V2.5C1.5 2.225 1.598 1.98967 1.794 1.794C1.99 1.59833 2.22533 1.50033 2.5 1.5H6V2.5H2.5V9.5H6V10.5H2.5ZM8 8.5L7.3125 7.775L8.5875 6.5H4.5V5.5H8.5875L7.3125 4.225L8 3.5L10.5 6L8 8.5Z"
+              fill="#C2BFBF"
+            />
+          </svg>
+        </button>
+      </div>
       <img
-        src="/rectangle-22.png"
-        className="w-[1217px] h-[165px] absolute left-[30px] top-[31px] rounded-2xl object-cover"
-      />
-      <img
-        src="/rectangle-23.png"
+        src={session?.user?.image ?? '/images/profile.png'}
+        alt="User profile image"
         className="w-[145px] h-[145px] absolute left-[82px] top-[124px] rounded-2xl object-cover"
       />
       <p className="w-[158px] h-9 absolute left-[244px] top-[211px] text-3xl font-semibold text-left text-white">
-        UserName
+        {session?.user?.name ?? 'UserName'}
       </p>
       <p className="w-[310px] h-[21px] absolute left-[244px] top-[247px] text-sm font-semibold text-left text-white">
-        madcamp_week2@kaist.co.kr
+        {session?.user?.email ?? 'madcamp_week2@kaist.co.kr'}
       </p>
-      <div className="w-[1242px] h-[508px] absolute left-[83px] top-[416px] overflow-hidden">
-        <div className="w-[305px] h-9 absolute left-2.5 top-0">
+    <div className="w-full h-[508px] absolute left-1/2 -translate-x-1/2 top-[416px] overflow-hidden px-4">
+        <div className="w-[305px] h-9 absolute left-[91px] top-0">
           <p className="absolute left-[35px] top-0 text-3xl font-bold text-left text-white">
             최근 본 영화 리스트
           </p>
@@ -45,15 +95,17 @@ export default function ProfilePage() {
             />
           </svg>
         </div>
-        <div className="absolute left-2.5 top-[57px] w-[1200px] overflow-x-auto whitespace-nowrap">
-          <MovieVerticalGallery movieIds={[0,1,2,3,4,5,6,7,8,9]} />
+        <div className="w-full overflow-x-auto mt-[57px] pl-[91px]">
+          <div className="flex gap-2 min-w-fit">
+            <MovieVerticalGallery movieIds={[0,1,2,3,4,5,6,7,8,9]} />
+          </div>
         </div>
       </div>
       <p className="w-[85px] h-9 absolute left-[93px] top-[276px] text-3xl font-semibold text-left text-white">
         Tags
       </p>
       <div className="flex justify-start items-center absolute left-[91px] top-[318px] gap-2.5">
-        {['SF', 'Action', 'Fantasy', 'Horror', 'Anime', 'melodrama'].map(tag => (
+        {['SF', 'Action', 'Fantasy', 'Horror', 'Anime', 'melodrama','drama'].map(tag => (
           <div
             key={tag}
             className="flex justify-center items-center flex-grow-0 flex-shrink-0 h-5 relative px-[5px] py-[3px] rounded-[10px] bg-white/50 border border-black/20"

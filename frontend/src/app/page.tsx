@@ -13,9 +13,9 @@ export default function Home() {
   const { data: session } = useSession();
   console.log("현재 세션:", session);
 
-  // if (!session) {
-  //   redirect('/login');
-  // }
+  if (!session) {
+    redirect('/login');
+  }
 
   return (
     <div className="flex flex-col w-full items-start justify-center min-h-screen">
@@ -61,15 +61,6 @@ export default function Home() {
         </div>
         <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
       </div>
-      {session ? (
-        <div>
-          <p className="text-lg font-semibold mb-2">현재 로그인: </p>
-          <UserProfile />
-        </div>
-      ) : (
-        <p className="text-sm text-gray-500 mb-2">❌ 로그인되지 않았습니다.</p>
-      )}
-      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   );
 }
