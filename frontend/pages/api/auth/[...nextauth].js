@@ -13,19 +13,60 @@ export default NextAuth({
       },
     }),
   ],
-  adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(clientPromise), // 사용자 정보는 DB에 저장됨
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "database", // ✅ 반드시 추가
+    strategy: "jwt", // JWT 기반 세션 사용
   },
+  jwt: {
+    encryption: false,
+    // secret: process.env.NEXTAUTH_SECRET,
+  },
+  // pages: {
+  //   error: "/auth", // 에러 페이지 경로
+  // },
   callbacks: {
-    async session({ session, user }) {
-      console.log("세션 콜백:", session)
+    async jwt({ token, user }) {
+      // JWT 토큰에 사용자 정보를 추가
+      if (user) {
+        token.id = user.id
+        token.email = user.email
+        // token.name = user.name
+      }
+      console.log("JWT 콜백:", token)
+      return token
+    },
+    async session({ session, token }) {
+      // 세션에 JWT 토큰 정보를 추가
+      if (token?.id) {
+        session.user.id = token.id;
+      }
+      // session.user.id = token.id
+      // session.user.email = token.email
+      console.log("세션 콜백:", session);
       return session
     },
     async signIn({ user }) {
-      console.log("로그인:", user.email)
-      return true
+      try {
+        const client = await clientPromise;
+        if (!client) {
+          throw new Error("clientPromise 반환 실패");
+        }
+
+        const db = client.db();
+        const existingUser = await db.collection("users").findOne({ email: user.email });
+
+        // if (!existingUser) {
+        //   console.log("❌ 신규 유저 로그인 차단:", user.email);
+        //   return false;
+        // }
+
+        console.log("✅ 기존 유저 로그인 허용:", user.email);
+        return true;
+      } catch (error) {
+        console.error("DB 오류:", error);
+        return false;
+      }
     }
   },
 })
