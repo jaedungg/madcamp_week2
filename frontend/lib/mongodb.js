@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb"
 
-const client = new MongoClient(process.env.MONGODB_URI)
+const client = new MongoClient(process.env.MONGO_URI)
 let clientPromise
 
 if (process.env.NODE_ENV === "development") {

@@ -1,6 +1,6 @@
 // checkDB.js
-const mongoose = require('mongoose');
-require('dotenv').config();
+import mongoose from 'mongoose';
+import 'dotenv/config'; // .env 파일을 자동으로 로드
 
 (async () => {
   try {
@@ -9,6 +9,7 @@ require('dotenv').config();
     process.exit(0); // 정상 종료
   } catch (err) {
     console.error('❌ DB 연결 실패:', err.message);
+    console.error(process.env.MONGO_URI);
     process.exit(1); // 오류로 종료
   }
 })();
