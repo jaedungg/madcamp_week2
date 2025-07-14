@@ -3,10 +3,29 @@
 import MovieVerticalGallery from '../components/MovieVerticalGallery';
 import { useSession, signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
+import{ updateUserProfile, getUserProfile } from '../../../lib/api';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
   const [coverImage, setCoverImage] = useState<string>('/images/banner.jpg');
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nickname, setNickname] = useState('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (session?.user?.id) {
+          const profile = await getUserProfile(session.user.id);
+          if (profile?.nickname) {
+            setNickname(profile.nickname);
+          }
+        }
+      } catch (err) {
+        console.error('프로필 불러오기 실패:', err);
+      }
+    };
+    fetchProfile();
+  }, [session]);
 
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -18,6 +37,13 @@ export default function ProfilePage() {
         }
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleNicknameSave = async () => {
+    if (session?.user?.id && nickname) {
+      await updateUserProfile(session.user.id, { nickname });
+      setIsEditingName(false);
     }
   };
 
@@ -66,9 +92,47 @@ export default function ProfilePage() {
         alt="User profile image"
         className="w-[145px] h-[145px] absolute left-[82px] top-[124px] rounded-2xl object-cover"
       />
-      <p className="w-[158px] h-9 absolute left-[244px] top-[211px] text-3xl font-semibold text-left text-white">
-        {session?.user?.name ?? 'UserName'}
-      </p>
+      <div className="absolute left-[244px] top-[211px] inline-flex items-center gap-2 z-10">
+        {isEditingName ? (
+          <input
+            className="text-3xl font-semibold text-left text-white rounded bg-transparent border-b border-white font-mono whitespace-nowrap w-fit min-w-0 w-auto"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            onBlur={handleNicknameSave}
+            autoFocus
+            maxLength={10}
+          />
+        ) : (
+          <p
+            className="text-3xl font-semibold text-left text-white rounded bg-transparent font-mono whitespace-nowrap w-fit min-w-0 w-auto"
+          >
+            {nickname}
+          </p>
+        )}
+        {!isEditingName && (
+          <button onClick={() => setIsEditingName(true)} aria-label="Edit nickname" className="z-10">
+            <svg
+              width={24}
+              height={24}
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-[24px] h-[24px] relative z-10"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0 9C0 4.02944 4.02944 0 9 0V0C13.9706 0 18 4.02944 18 9V9C18 13.9706 13.9706 18 9 18V18C4.02944 18 0 13.9706 0 9V9Z"
+                fill="#A4A4A4"
+                fillOpacity="0.57"
+              />
+              <path
+                d="M13.3538 6.52097C13.5487 6.326 13.5487 6.00104 13.3538 5.81607L12.1839 4.64623C11.999 4.45126 11.674 4.45126 11.479 4.64623L10.5592 5.5611L12.4339 7.43584M4.5 11.6253V13.5H6.37474L11.904 7.96577L10.0292 6.09103L4.5 11.6253Z"
+                fill="#C0C0C0"
+              />
+            </svg>
+          </button>
+        )}
+      </div>
       <p className="w-[310px] h-[21px] absolute left-[244px] top-[247px] text-sm font-semibold text-left text-white">
         {session?.user?.email ?? 'madcamp_week2@kaist.co.kr'}
       </p>
