@@ -42,7 +42,7 @@ export default function ProfilePage() {
           onClick={() => signOut({ callbackUrl: '/login' })}
           className="w-[82px] h-7 relative rounded-lg bg-white/[0.33] border border-white/[0.51] cursor-pointer hover:bg-white/50 transition p-1"
         >
-          <p className="absolute left-[26px] top-[7px] text-xs font-medium text-left text-[#c2bfbf]">
+          <p className="absolute left-[26px] top-[5px] text-xs font-medium text-left text-[#c2bfbf]">
             로그아웃
           </p>
           <svg
@@ -51,7 +51,7 @@ export default function ProfilePage() {
             viewBox="0 0 12 12"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-3 h-3 absolute left-2.5 top-2"
+            className="w-3 h-3 absolute left-2.5 top-1.5"
             preserveAspectRatio="none"
           >
             <path
