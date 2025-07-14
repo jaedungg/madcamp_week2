@@ -10,6 +10,7 @@ import userRoutes from './routes/user.routes.js';
 import tmdbRoutes from './routes/tmdb.routes.js';
 import comicRoutes from './routes/comic.routes.js';
 import commentRoutes from './routes/comment.routes.js';
+import imagesRoutes from './routes/image.routes.js';
 
 dotenv.config();
 dotenv.config({ path: './.env.local' });
@@ -27,7 +28,8 @@ app.use('/api/users', userRoutes)
 // app.use('/api/movies', movieRoutes);
 app.use('/api/tmdb', tmdbRoutes);
 app.use('/api/comics', comicRoutes);
-app.use('/api/comics', commentRoutes); // ✅ 변경됨!
+app.use('/api/comics', commentRoutes);
+app.use('/api/images', imagesRoutes);
 
 app.use(cors({
   origin: 'http://localhost:3000',
