@@ -59,3 +59,15 @@ export const deleteUserProfile = async (userId: string) => {
   const response = await axios.delete(`${BASE_URL}/api/users/${userId}`);
   return response.data;
 };
+
+export const fetchPopularMovies = async () => {
+  const res = await fetch(`${BASE_URL}/api/tmdb/movie/popular`);
+  if (!res.ok) throw new Error('Failed to fetch popular movies');
+  return res.json();
+};
+
+export const fetchLatestMovies = async () => {
+  const res = await fetch(`${BASE_URL}/api/tmdb/movie/upcoming`);
+  if (!res.ok) throw new Error('Failed to fetch latest movies');
+  return res.json();
+};
