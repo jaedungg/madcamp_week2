@@ -5,20 +5,31 @@ import RoundButton from '@/app/components/RoundButton';
 import { useParams, useRouter, redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
+import { getMovieDetails } from '../../../../lib/api'; // adjust path if needed
 
 const MovieDetailPage = () => {
   const params = useParams();
-  const id = params?.id ?? 'unknown';
+  const rawId = params?.id;
+  const id = Array.isArray(rawId) ? rawId[0] : rawId ?? 'unknown';
 
   const router = useRouter();
   const [showSummarySteps, setShowSummarySteps] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const [selectedStepId, setSelectedStepId] = useState<number | null>(null);
+  const [movieData, setMovieData] = useState<any>(null);
 
   useEffect(() => {
     console.log('📌 selectedStepId:', selectedStepId);
   }, [selectedStepId]);
+
+    useEffect(() => {
+    const fetchMovie = async () => {
+      const data = await getMovieDetails(id);
+      setMovieData(data);
+    };
+    fetchMovie();
+  }, [id]);
 
   const handleSelectStep = (step: number) => {
     setSelectedStep(step);
@@ -31,13 +42,13 @@ const MovieDetailPage = () => {
       <div className='flex flex-row'>
         {/* Movie Poster */}
         <img
-          src="/images/movie_0.png"
+          src={movieData?.poster_path ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}` : '/images/movie_0.png'}
           className="w-[397px] h-[565px] rounded-tl-lg rounded-tr-lg object-contain"
         />
         {/* Movie Details */}
-        <div className="flex flex-col justify-start items-start absolute left-[443px] top-[87px] gap-8 w-full pr-4">
+        <div className="flex flex-col justify-start items-start ml-8 gap-8 flex-1">
           <p className="flex-grow-0 flex-shrink-0 text-[32px] font-semibold text-left text-white">
-            극장판 주술회전 0 상세 정보
+            {movieData?.title ?? '영화 제목'}
           </p>
           <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-4">
             <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
@@ -65,7 +76,7 @@ const MovieDetailPage = () => {
                 장르:{" "}
               </p>
               <p className="text-2xl font-medium text-left text-white">
-                SF &amp; 판타지 애니, 액션 애니, 일본 작품, 액션 &amp; 어드벤처 영화, 애니메이션 영화
+                {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '장르 정보 없음'}
               </p>
             </div>
             <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
@@ -86,8 +97,7 @@ const MovieDetailPage = () => {
             </div>
           </div>
           <p className='self-stretch flex-grow-0 flex-shrink-0 s-[500px] text-2x1 font-medium text-left text-white'>
-              &lt;주술회전&gt; 애니메이션 시리즈의 막을 연 사건, 그 이전을 배경으로 한 프리퀄. 아쿠타미
-              게게의 원작 만화를 각색하고 더 확장했다.
+              {movieData?.overview ?? '영화 설명을 불러오는 중입니다.'}
           </p>
         </div>    
       </div>

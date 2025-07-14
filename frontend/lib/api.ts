@@ -10,6 +10,6 @@ export const searchMovies = async (term: string) => {
 };
 
 export const getMovieDetails = async (movieId: string) => {
-  const response = await axios.get(`/api/tmdb/movie/${movieId}`);
+  const response = await axios.get(`${BASE_URL}/api/tmdb/movie/${movieId}`);
   return response.data;
 };
