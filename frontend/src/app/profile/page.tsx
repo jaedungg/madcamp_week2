@@ -32,7 +32,7 @@ export default function ProfilePage() {
         />
         <img
           src={coverImage}
-          className="w-full max-w-[1217px] h-[165px] absolute left-1/2 -translate-x-1/2 top-[31px] rounded-2xl object-cover"
+          className="w-full max-w-[2500px] h-[200px] absolute left-1/2 -translate-x-1/2 object-cover"
           alt="Cover"
         />
       </label>
