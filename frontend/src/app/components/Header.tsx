@@ -34,14 +34,15 @@ export default function Header() {
       }}
     >
       {/* 왼쪽 메뉴 */}
-      <div className="flex items-center gap-4 text-lg">
-        <div className="flex items-center gap-2 px-2 cursor-pointer" onClick={() => move2Home()}>          
-          <img src="/icons/logo.svg" alt="Globe Icon" width={32} height={32} />
-          <p className="text-2xl cursor-pointer">ReelRecap</p>
+      <div className="flex items-center text-lg">
+        <div className="flex items-center gap-2 px-2 cursor-pointer" onClick={() => move2Home()}>
+          <img src="/icons/logo2.svg" alt="Globe Icon" className="h-8 object-contain pt-[2px]" />
         </div>
-        <p className={`cursor-pointer ${(pathname == '/') ? "font-bold" : ""}`} onClick={() => move2Home()}>Home</p>
-        <p className={`cursor-pointer ${(pathname?.startsWith('/movie')) ? "font-bold" : ""}`} onClick={() => move2MoviePage(1)}>Movie</p>
-        <p className={`cursor-pointer ${(pathname?.startsWith('/comic')) ? "font-bold" : ""}`} onClick={() => move2Home()}>Anime</p>
+        <div className="flex items-center gap-2">
+          <p className={`pt-[6px] cursor-pointer ${(pathname == '/') ? 'font-bold' : ''}`} onClick={move2Home}>Home</p>
+          <p className={`pt-[6px] cursor-pointer ${(pathname?.startsWith('/movie')) ? 'font-bold' : ''}`} onClick={() => move2MoviePage(1)}>Movie</p>
+          <p className={`pt-[6px] cursor-pointer ${(pathname?.startsWith('/comic')) ? 'font-bold' : ''}`} onClick={move2Home}>Anime</p>
+        </div>
       </div>
 
       {/* 오른쪽 메뉴 */}
@@ -60,10 +61,12 @@ export default function Header() {
           <img className="cursor-pointer" src="/icons/search.svg" alt="Globe Icon" width={32} height={32} onClick={toggleSearch}/>
         </div>
         {/* 프로필 원 */}
-        <img 
-          className="cursor-pointer rounded-full " 
-          src={user?.image ?? "/images/profile.png"}
-          alt="Profile image" width={32} height={32} />
+        <div onClick={() => router.push('/profile')}>
+          <img 
+            className="cursor-pointer rounded-full" 
+            src={user?.image ?? "/images/profile.png"}
+            alt="Profile image" width={32} height={32} />
+        </div>
       </div>
     </header>
   );

@@ -7,6 +7,7 @@ import RectangleButton from './components/RectangleButton';
 import MovieVerticalView from './components/MovieVerticalGallery';
 import UserProfile from './components/UserProfile';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -26,7 +27,9 @@ export default function Home() {
           className='flex w-full h-full object-cover'
         />
         <div className='absolute bottom-0 left-0 flex items-center justify-center mx-4 my-4 gap-4'>
-          <RectangleButton icon="document" text="영화 상세 페이지" />
+          <Link href="/movie/unknown">
+            <RectangleButton icon="document" text="영화 상세 페이지" />
+          </Link>
         </div>
       </div>
 
@@ -40,15 +43,24 @@ export default function Home() {
         </div>
         <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
       </div>
-      {session ? (
-        <div>
-          <p className="text-lg font-semibold mb-2">현재 로그인: </p>
-          <UserProfile />
+      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
+        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <p className="left-[35px] top-0 text-xl text-left text-white">
+            최근 본 작품
+          </p>
         </div>
-      ) : (
-        <p className="text-sm text-gray-500 mb-2">❌ 로그인되지 않았습니다.</p>
-      )}
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+        <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
+      </div>
+      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
+        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <p className="left-[35px] top-0 text-xl text-left text-white">
+            마음에 쏙 드실 거예요
+          </p>
+        </div>
+        <MovieVerticalView movieIds={[0,1,2,3,4,5,6,7,8,9]} />
+      </div>
     </div>
   );
 }

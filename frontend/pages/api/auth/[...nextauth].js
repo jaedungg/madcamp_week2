@@ -18,6 +18,9 @@ export default NextAuth({
   session: {
     strategy: "jwt", // JWT 기반 세션 사용
   },
+  pages: {
+    signIn: '/login',
+  },
   jwt: {
     encryption: false,
     // secret: process.env.NEXTAUTH_SECRET,
@@ -29,6 +32,7 @@ export default NextAuth({
     async jwt({ token, user }) {
       // JWT 토큰에 사용자 정보를 추가
       if (user) {
+        console.log("JWT user:", user);
         token.id = user.id
         token.email = user.email
         // token.name = user.name
