@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-  const [coverImage, setCoverImage] = useState<string>('/rectangle-22.png');
+  const [coverImage, setCoverImage] = useState<string>('/images/banner.jpg');
 
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

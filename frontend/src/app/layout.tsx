@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import { usePathname } from 'next/navigation';
 import SessionProviderWrapper from "./SessionProviderWrapper";
+import SlateAnimation from "./components/SlateAnimation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +24,8 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
+  const showSlate = pathname === '/';
+
   const showHeader = pathname !== '/login' && !(pathname?.startsWith('/comic/'));
 
   return (
@@ -32,6 +35,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
         >
           <div className="flex flex-col w-full min-h-screen">
+            {showSlate && <SlateAnimation />}
             {showHeader && <Header />}
             {children}
           </div>

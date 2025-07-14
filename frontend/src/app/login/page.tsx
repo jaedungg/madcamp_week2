@@ -34,7 +34,13 @@ const LoginPage = () => {
           <div className="flex flex-col justify-center items-center flex-grow-0 flex-shrink-0 relative gap-3">
             <div 
               className="flex cursor-pointer justify-center items-center flex-grow-0 flex-shrink-0 relative gap-2.5 px-5 py-2 rounded-full border border-white"
-              onClick={() => signIn('google')}
+              onClick={async () => {
+                const res = await signIn('google', { redirect: false });
+                console.log("signIn result", res);
+                if (res?.ok) {
+                  window.location.href = '/?fromLogin=true';
+                }
+              }}
             >
               <img src="images/google_logo.png" className="flex-grow-0 flex-shrink-0 w-6 h-6 object-cover" />
               <p className="flex-grow-0 flex-shrink-0 text-base font-semibold text-center text-white">
