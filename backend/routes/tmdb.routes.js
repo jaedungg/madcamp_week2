@@ -65,6 +65,64 @@ router.get('/movie/search', async (req, res) => {
 
 /**
  * @swagger
+ * /api/tmdb/movie/popular:
+ *   get:
+ *     summary: Get popular movies using TMDB API
+ *     tags: [TMDB]
+ *     responses:
+ *       200:
+ *         description: 인기 영화 정보
+ *       401:
+ *         description: Unauthorized access to TMDB API
+ *       500:
+ *         description: TMDB API error
+ */
+router.get('/movie/popular', async (req, res) => {
+  try {
+    const movies = await tmdb.getPopularMovies();
+    if (!movies) {
+      return res.status(404).json({ error: '영화를 찾을 수 없습니다.' });
+    }
+    res.status(200).json(movies);
+  } catch (err) {
+    console.error('TMDB 인기 영화 조회 오류:', err.message);
+    res.status(err.response?.status || 500).json({
+      error: err.response?.data?.status_message || 'TMDB API Error',
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/tmdb/movie/upcoming:
+ *   get:
+ *     summary: Get upcoming movies using TMDB API
+ *     tags: [TMDB]
+ *     responses:
+ *       200:
+ *         description: 인기 영화 정보
+ *       401:
+ *         description: Unauthorized access to TMDB API
+ *       500:
+ *         description: TMDB API error
+ */
+router.get('/movie/upcoming', async (req, res) => {
+  try {
+    const movies = await tmdb.getUpcomingMovies();
+    if (!movies) {
+      return res.status(404).json({ error: '영화를 찾을 수 없습니다.' });
+    }
+    res.status(200).json(movies);
+  } catch (err) {
+    console.error('TMDB 최신 영화 조회 오류:', err.message);
+    res.status(err.response?.status || 500).json({
+      error: err.response?.data?.status_message || 'TMDB API Error',
+    });
+  }
+});
+
+/**
+ * @swagger
  * /api/tmdb/movie/{movieId}:
  *   get:
  *     summary: Get movie details using TMDB API
@@ -164,5 +222,6 @@ router.get('/movie/:movieId/credits', async (req, res) => {
     });
   }
 });
+
 
 export default router;
