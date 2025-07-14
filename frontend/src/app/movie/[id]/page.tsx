@@ -76,7 +76,7 @@ const MovieDetailPage = () => {
                   ))}
                 {Array.isArray(movieCredits.cast) && (
                   <div className="flex self-stretch gap-3">
-                    <p className="flex-shrink-0 text-2xl font-medium text-left text-[#aaa] pt-1">
+                    <p className="flex-shrink-0 text-2xl font-medium text-left text-[#aaa]">
                       출연:
                     </p>
                     <p className="text-2xl font-medium text-left text-white break-words">
