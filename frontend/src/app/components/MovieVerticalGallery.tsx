@@ -19,7 +19,9 @@ export default function MovieVerticalView({ movieIds }: MovieVerticalViewProps) 
   useEffect(() => {
     const fetchMovies = async () => {
       const results = await Promise.all(
-        movieIds.map((id) => getMovieDetails(id.toString()))
+        movieIds
+          .filter((id) => id != null)
+          .map((id) => getMovieDetails(id.toString()))
       );
       setMovies(results);
     };

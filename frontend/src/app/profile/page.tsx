@@ -3,19 +3,20 @@
 import MovieVerticalGallery from '../components/MovieVerticalGallery';
 import { useSession, signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import{ updateUserProfile, getUserProfile } from '../../../lib/api';
+import{ updateUserProfile, getMyProfile } from '../../../lib/api';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
   const [coverImage, setCoverImage] = useState<string>('/images/banner.jpg');
   const [isEditingName, setIsEditingName] = useState(false);
   const [nickname, setNickname] = useState('');
+  const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         if (session?.user?.id) {
-          const profile = await getUserProfile(session.user.id);
+          const profile = await getMyProfile(session.user.id);
           if (profile?.nickname) {
             setNickname(profile.nickname);
           }
@@ -29,6 +30,29 @@ export default function ProfilePage() {
     };
     fetchProfile();
   }, [session]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (session?.user?.id) {
+        console.log("✅ getMyProfile 호출 직전");
+        const profile = await getMyProfile(session.user.id)
+        console.log("✅ getMyProfile 응답:", profile);
+        console.log("getMyProfile 응답:", profile);
+        if (Array.isArray(profile?.recentMovies)) {
+          const ids = profile.recentMovies;
+          console.log("✅ recentViewedIds 설정:", ids);
+          setRecentViewedIds(ids);
+        } else {
+          console.warn("❌ profile.recentMovies가 배열이 아님:", profile?.recentMovies);
+        }
+      }
+      } catch (error) {
+        console.error('최근 본 영화 불러오기 실패:', error);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("📂 파일 선택됨");
@@ -170,7 +194,7 @@ export default function ProfilePage() {
         </div>
         <div className="w-full overflow-x-auto mt-[57px] pl-[91px]">
           <div className="flex gap-2 min-w-fit">
-            <MovieVerticalGallery movieIds={[0,1,2,3,4,5,6,7,8,9]} />
+            <MovieVerticalGallery movieIds={recentViewedIds} />
           </div>
         </div>
       </div>

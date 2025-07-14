@@ -8,7 +8,7 @@ import MovieVerticalView from './components/MovieVerticalGallery';
 import UserProfile from './components/UserProfile';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { fetchPopularMovies,fetchLatestMovies } from '../../lib/api';
+import { fetchPopularMovies,fetchLatestMovies,getMyProfile } from '../../lib/api';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -22,6 +22,7 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [latestMovieIds, setLatestMovieIds] = useState<number[]>([]);
+  const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
 
   useEffect(() => {
     const scrollElement = scrollRef.current;
@@ -59,7 +60,6 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [popularMovies]);
-  console.log("현재 세션:", session);
 
   useEffect(() => {
     const fetchLatest = async () => {
@@ -77,11 +77,32 @@ export default function Home() {
     fetchLatest();
   }, []);
 
-
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (session?.user?.id) {
+        console.log("✅ getMyProfile 호출 직전");
+        const profile = await getMyProfile(session.user.id)
+        console.log("✅ getMyProfile 응답:", profile);
+        console.log("getMyProfile 응답:", profile);
+        if (Array.isArray(profile?.recentMovies)) {
+          const ids = profile.recentMovies;
+          console.log("✅ recentViewedIds 설정:", ids);
+          setRecentViewedIds(ids);
+        } else {
+          console.warn("❌ profile.recentMovies가 배열이 아님:", profile?.recentMovies);
+        }
+      }
+      } catch (error) {
+        console.error('최근 본 영화 불러오기 실패:', error);
+      }
+    };
+    fetchProfile();
+  }, []);
   if (!session) {
     redirect('/login');
   }
-
+  
   return (
     <div className="flex flex-col w-full items-start justify-center min-h-screen">
       {/* Background Poster */}
@@ -156,7 +177,7 @@ export default function Home() {
           </p>
         </div>
           <div className="overflow-x-auto scrollbar-hide">
-            <MovieVerticalView movieIds={latestMovieIds} />
+            <MovieVerticalView movieIds={recentViewedIds} />
           </div>
       </div>
       <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  

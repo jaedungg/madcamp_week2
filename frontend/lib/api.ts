@@ -23,8 +23,8 @@ export const getAllUsers = async () => {
   return response.data;
 };
 
-export const getMyProfile = async () => {
-  const response = await axios.get(`${BASE_URL}/api/users/me`);
+export const getMyProfile = async (movieId: string) => {
+  const response = await axios.get(`${BASE_URL}/api/users/me/${movieId}`);
   return response.data;
 };
 
