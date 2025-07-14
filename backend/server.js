@@ -28,6 +28,10 @@ app.use('/api/movies', movieRoutes);
 app.use('/api/tmdb', tmdbRoutes);
 app.use('/api/comics', comicRoutes);
 app.use('/api/comics', commentRoutes); // ✅ 변경됨!
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+}));
 // app.use('/api/users', userRoutes);
 
 mongoose.connect(process.env.MONGO_URI)

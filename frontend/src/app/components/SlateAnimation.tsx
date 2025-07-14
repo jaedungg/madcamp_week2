@@ -12,7 +12,11 @@ export default function SlateAnimation() {
 useEffect(() => {
   if (status === "authenticated") {
     setShow(true);
-    setTimeout(() => setIsClosed(true), 1000);
+    setTimeout(() => {
+      setIsClosed(true);
+      const audio = new Audio("/sounds/slate_1.mp3");
+      audio.play();
+    }, 500);
     setTimeout(() => setShow(false), 1800);
   }
 }, [status]);
@@ -24,7 +28,8 @@ useEffect(() => {
       <img
         src={isClosed ? "/icons/login_icon_close.svg" : "/icons/login_icon.svg"}
         alt="슬레이트"
-        className="w-[200px] h-[200px] object-contain transition-all duration-700 ease-in-out"
+        className={`w-[200px] h-[200px] object-contain transition-all duration-700 ease-in-out
+          ${isClosed ? "opacity-0 scale-200" : "opacity-100 scale-100"}`}
       />
     </div>
   );
