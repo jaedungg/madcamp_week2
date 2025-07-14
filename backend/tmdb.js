@@ -34,9 +34,46 @@ async function getMovieDetails(movieId) {
     });
     return res.data;
   } catch (error) {
-    console.error('TMDB 검색 오류:', error.message);
+    console.error('TMDB 영화 정보 조회 오류:', error.message);
     return null;
   }
 }
 
-export default { searchMovies, getMovieDetails };
+async function getMovieCredits(movieId) {
+  console.log('TMDB 영화 크레딧 조회:', movieId);
+
+  try {
+    const res = await axios.get(`${BASE_URL}/movie/${movieId}/credits`, {
+      params: {
+        api_key: API_KEY,
+        language: 'ko-KR',
+      },
+    });
+
+    const data = res.data;
+
+    // 배우 상위 10명 (order 기준 정렬)
+    const topCast = [...data.cast]
+      .sort((a, b) => a.order - b.order)
+      .slice(0, 10)
+      .map(person => person.name);
+
+    // 제작진 중 감독 및 각본가만 필터
+    const importantCrew = data.crew
+      .filter(person => person.job === 'Director' || person.job === 'Screenplay')
+      .map(person => ({
+        name: person.name,
+        job: person.job,
+      }));
+
+    return {
+      cast: topCast,
+      crew: importantCrew,
+    };
+  } catch (error) {
+    console.error('TMDB 영화 크레딧 조회 오류:', error.message);
+    return null;
+  }
+}
+
+export default { searchMovies, getMovieDetails, getMovieCredits };
