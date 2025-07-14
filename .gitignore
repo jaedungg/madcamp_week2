@@ -36,3 +36,5 @@ coverage/
 # OS & 기타
 Thumbs.db
 
+# google API key
+google-credentials.json

@@ -30,7 +30,7 @@ export default function MovieVerticalView({ movieIds }: MovieVerticalViewProps) 
   }, [movieIds]);
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full scrollbar-hide overflow-x-auto">
       <div className="flex gap-4 py-4 w-max">
         {movies.map((movie) => (
           <Link key={movie.id} href={`/movie/${movie.id}`}>
