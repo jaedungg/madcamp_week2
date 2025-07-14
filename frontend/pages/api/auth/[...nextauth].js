@@ -16,16 +16,33 @@ export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "database", // ✅ 반드시 추가
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: '/login',
   },
   callbacks: {
-    async session({ session, user }) {
-      console.log("세션 콜백:", session)
-      return session
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = user.image;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.name;
+        session.user.image = token.picture;
+      }
+      return session;
     },
     async signIn({ user }) {
-      console.log("로그인:", user.email)
-      return true
+      console.log("로그인:", user.email);
+      return true;
     }
   },
 })
