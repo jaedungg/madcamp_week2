@@ -19,6 +19,9 @@ export default function ProfilePage() {
           if (profile?.nickname) {
             setNickname(profile.nickname);
           }
+          if (profile?.bannerImage) {
+            setCoverImage(profile.bannerImage);
+          }
         }
       } catch (err) {
         console.error('프로필 불러오기 실패:', err);
@@ -28,12 +31,18 @@ export default function ProfilePage() {
   }, [session]);
 
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("📂 파일 선택됨");
     const file = e.target.files?.[0];
     if (file) {
+    console.log("📸 파일 있음:", file.name);
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         if (typeof reader.result === 'string') {
           setCoverImage(reader.result);
+          console.log("🪄 저장할 배너 이미지 URL:", reader.result.slice(0, 100));
+          if (session?.user?.id) {
+            await updateUserProfile(session.user.id, { bannerImage: reader.result }); // 서버가 있어야 가능
+          }
         }
       };
       reader.readAsDataURL(file);
