@@ -1,35 +1,5 @@
 import mongoose from 'mongoose';
 
-// const UserSchema = new mongoose.Schema({
-//   email: { type: String, required: true, unique: true },
-//   nickname: { type: String },
-//   googleId: { type: String },
-//   profileImage: { type: String },
-//   favoriteGenres: [{ type: String }], // 예: ["Action", "Drama"]
-//   likedMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }],
-//   isAdmin: { type: Boolean, default: false },
-//   language: { type: String, default: 'ko' }
-// }, { timestamps: true });
-
-// const MovieSchema = new mongoose.Schema({
-//   tmdbId: { type: Number, required: true, unique: true }, // TMDB 고유 ID
-//   title: { type: String, required: true },
-//   overview: { type: String },
-//   posterPath: { type: String },
-//   releaseDate: { type: String },
-//   genres: [{ type: String }], // TMDB 장르 이름 배열
-//   language: { type: String, default: 'ko' },
-// }, { timestamps: true });
-
-// const CommentSchema = new mongoose.Schema({
-//   comic: { type: mongoose.Schema.Types.ObjectId, ref: 'Comic', required: true },
-//   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-//   content: { type: String, required: true },
-//   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-//   createdAt: { type: Date, default: Date.now },
-//   updatedAt: { type: Date, default: Date.now }
-// });
-
 const ComicSchema = new mongoose.Schema({
   movie: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
   type: { type: String, enum: ['summary', 'parody'], required: true }, // 예: 'summary' or 'parody'

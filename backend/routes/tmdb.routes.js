@@ -126,4 +126,43 @@ router.get('/movie/:movieId', async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/tmdb/movie/{movieId}/credits:
+ *   get:
+ *     summary: Get movie creditss using TMDB API
+ *     tags: [TMDB]
+ *     description: Retrieves credits about a specific movie using TMDB ID.
+ *     parameters:
+ *       - in: path
+ *         name: movieId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: TMDB 영화 ID
+ *     responses:
+ *       200:
+ *         description: 영화 credit 정보
+ *       401:
+ *         description: Unauthorized access to TMDB API
+ *       500:
+ *         description: TMDB API error
+ */
+router.get('/movie/:movieId/credits', async (req, res) => {
+  const { movieId } = req.params;
+
+  try {
+    const movie = await tmdb.getMovieCredits(movieId);
+    if (!movie) {
+      return res.status(404).json({ error: '영화를 찾을 수 없습니다.' });
+    }
+    res.status(200).json(movie);
+  } catch (err) {
+    console.error('TMDB 크레딧 정보 조회 오류:', err.message);
+    res.status(err.response?.status || 500).json({
+      error: err.response?.data?.status_message || 'TMDB API Error',
+    });
+  }
+});
+
 export default router;
