@@ -6,24 +6,18 @@ import models from '../models/comic.model.js';
 const Comic = models.Comic;
 const ComicStep = models.ComicStep;
 
-// GET /api/coics?movieId={movieId}
+// GET /api/coics/movie/:movieId
 const getComicsByMovieId = async (req, res) => {
   try {
-    const { movieId } = req.query;
+    const { movieId } = req.params;
 
     if (!movieId) {
       return res.status(400).json({ message: 'movieId query param is required' });
     }
 
-    console.log(typeof Movie, Movie);
-    const movie = await Movie.findOne({ tmdbId: movieId });
-    if (!movie) {
-      return res.status(404).json({ message: 'Movie not found' });
-    }
-
-    const comics = await Comic.find({ movie: movie._id })
-      .populate('createdBy', 'nickname') // 유저 닉네임만 포함
-      .select('title type language createdBy'); // 필요한 필드만
+    const comics = await Comic.find({ movieId: movieId })
+      .populate('createdBy', 'nickname email name') 
+      .select('movieId title level language createdBy comment'); // 필요한 필드만
 
     res.json(comics);
   } catch (err) {
@@ -35,24 +29,35 @@ const getComicsByMovieId = async (req, res) => {
 // GET /api/comics/:comicId
 const getComicById = async (req, res) => {
   try {
-    const comic = await Comic.findById(req.params.comicId)
-      .populate('createdBy', 'nickname');
+    const { comicId } = req.params;
+    const comic = await Comic.findById(comicId)
+      .populate('createdBy', 'nickname email name')
+      .select('movieId title level language createdBy comment');
+
     if (!comic) return res.status(404).json({ message: 'Comic not found' });
-    res.json(comic);
+
+    // 해당 comicId에 속한 모든 단계 조회
+    const steps = await ComicStep.find({ comic: comicId }).sort('stepNumber');
+    
+    res.json({
+      ...comic.toObject(),  // Mongoose 문서를 평범한 객체로 변환
+      steps,                // ComicStep 배열 포함
+    });
   } catch (err) {
+    console.error('getComicById 오류:', err.message);
     res.status(500).json({ error: err.message });
   }
 };
 
-// POST /api/comics
+// POST /api/comics/movie/:movieId
 const createComic = async (req, res) => {
   try {
-    const { movieId, title, type, description } = req.body;
+    const movieId = req.params.movieId;
+    const { level, title } = req.body;
     const comic = new Comic({
-      movie: movieId,
+      movieId: movieId,
+      level,
       title,
-      type,
-      description,
     });
     await comic.save();
     res.status(201).json(comic);
@@ -64,16 +69,22 @@ const createComic = async (req, res) => {
 // POST /api/comics/:comicId/steps
 const addStepToComic = async (req, res) => {
   try {
-    const { stepNumber, imageUrl, text, audioUrl } = req.body;
-    const comic = await Comic.findById(req.params.comicId);
+    const { stepNumber, imageUrl, text } = req.body;
+    const { comicId } = req.params;
+
+    const comic = await Comic.findById(comicId);
     if (!comic) return res.status(404).json({ message: 'Comic not found' });
 
-    if (!comic.steps) {
-      comic.steps = [];
-    }
-    comic.steps.push({ stepNumber, imageUrl, text, audioUrl });
-    await comic.save();
-    res.status(201).json(comic);
+    const newStep = new ComicStep({
+      comic: comicId,
+      stepNumber,
+      imageUrl,
+      text,
+    });
+
+    await newStep.save();
+
+    res.status(201).json(newStep);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
