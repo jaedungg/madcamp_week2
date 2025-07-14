@@ -16,6 +16,7 @@ export default function Header() {
     const [searchQuery, setSearchQuery] = useState('');
 
     interface MovieResult {
+      id: number;
       title: string;
       poster_path?: string;
       // 필요한 필드를 여기에 추가
@@ -89,23 +90,29 @@ export default function Header() {
                 placeholder="검색어를 입력하세요"
                 className="px-2 border rounded"
               /> 
-              <div className="absolute top-12 right-0 z-50">
-                <div className="flex flex-col justify-start items-start w-[328px] relative gap-2.5 px-3 py-2.5 rounded-lg bg-black/[0.84]">
-                  {searchResults.map((movie, i) => (
-                      <div key={i} className="self-stretch flex-grow-0 flex-shrink-0 h-[68px] relative">
-                        <img
-                          src={movie.poster_path 
-                            ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` 
-                            : "rectangle-19.png"}
-                          className="w-12 h-[68px] absolute left-[-1px] top-[-1px] rounded object-contain"
-                        />
-                        <p className="absolute left-[60px] top-[27px] text-xs text-left text-white">
-                          {movie.title}
-                        </p>
-                      </div>
-                    ))}
+              {searchQuery && (
+                <div className="absolute top-12 right-0 z-50 h-[500px] overflow-y-auto">
+                  <div className="flex flex-col justify-start items-start w-[328px] relative gap-2.5 px-3 py-2.5 rounded-lg bg-black/[0.84]">
+                    {searchResults.map((movie, i) => (
+                      <div 
+                          key={i} 
+                          onClick={() => router.push(`/movie/${movie.id}`)} 
+                          className="cursor-pointer self-stretch flex-grow-0 flex-shrink-0 h-[68px] relative hover:bg-white/10 transition"
+                        >
+                          <img
+                            src={movie.poster_path 
+                              ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` 
+                              : "rectangle-19.png"}
+                            className="w-12 h-[68px] absolute left-[-1px] top-[-1px] rounded object-contain"
+                          />
+                          <p className="absolute left-[60px] top-[27px] text-xs text-left text-white">
+                            {movie.title}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           )}
           <img className="cursor-pointer" src="/icons/search.svg" alt="Globe Icon" width={32} height={32} onClick={toggleSearch}/>

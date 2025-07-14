@@ -10,6 +10,64 @@ export const searchMovies = async (term: string) => {
 };
 
 export const getMovieDetails = async (movieId: string) => {
-  const response = await axios.get(`/api/tmdb/movie/${movieId}`);
+  const response = await axios.get(`${BASE_URL}/api/tmdb/movie/${movieId}`);
   return response.data;
+};
+
+export const getMovieCredits = async (id: string) => {
+  const res = await axios.get(`${BASE_URL}/api/tmdb/movie/${id}/credits`);
+  return res.data;
+};
+export const getAllUsers = async () => {
+  const response = await axios.get(`${BASE_URL}/api/users`);
+  return response.data;
+};
+
+export const getMyProfile = async (movieId: string) => {
+  const response = await axios.get(`${BASE_URL}/api/users/me/${movieId}`);
+  return response.data;
+};
+
+export const getUserProfile = async (userId: string) => {
+  const response = await axios.get(`${BASE_URL}/api/users/${userId}`);
+  return response.data;
+};
+
+export const createUserProfile = async (data: {
+  email: string;
+  nickname?: string;
+  profileImage?: string;
+  favoriteGenres?: string[];
+  language?: string;
+}) => {
+  const response = await axios.post(`${BASE_URL}/api/users`, data);
+  return response.data;
+};
+
+export const updateUserProfile = async (userId: string, data: {
+  nickname?: string;
+  profileImage?: string;
+  bannerImage?: string;
+  favoriteGenres?: string[];
+  language?: string;
+}) => {
+  const response = await axios.put(`${BASE_URL}/api/users/${userId}`, data);
+  return response.data;
+};
+
+export const deleteUserProfile = async (userId: string) => {
+  const response = await axios.delete(`${BASE_URL}/api/users/${userId}`);
+  return response.data;
+};
+
+export const fetchPopularMovies = async () => {
+  const res = await fetch(`${BASE_URL}/api/tmdb/movie/popular`);
+  if (!res.ok) throw new Error('Failed to fetch popular movies');
+  return res.json();
+};
+
+export const fetchLatestMovies = async () => {
+  const res = await fetch(`${BASE_URL}/api/tmdb/movie/upcoming`);
+  if (!res.ok) throw new Error('Failed to fetch latest movies');
+  return res.json();
 };
