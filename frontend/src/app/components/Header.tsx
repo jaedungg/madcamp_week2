@@ -54,6 +54,15 @@ export default function Header() {
       }
     }, [searchQuery]);
 
+    // 5초 후 검색바 자동 닫힘
+    useEffect(() => {
+      if (!isSearchOpen) return;
+      const timeoutId = setTimeout(() => {
+        setIsSearchOpen(false);
+      }, 10000);
+      return () => clearTimeout(timeoutId);
+    }, [isSearchOpen, searchQuery]);
+
   return (
     <header
       className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4"
@@ -65,9 +74,9 @@ export default function Header() {
       {/* 왼쪽 메뉴 */}
       <div className="flex items-center text-lg">
         <div className="flex items-center gap-2 px-2 cursor-pointer" onClick={() => move2Home()}>
-          <img src="/icons/logo2.svg" alt="Globe Icon" className="h-8 object-contain pt-[2px]" />
+          <img src="/icons/logo2.svg" alt="Globe Icon" className="h-10 object-contain pt-[0px] ml-[-15px]" />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-x-5">
           <p className={`pt-[6px] cursor-pointer ${(pathname == '/') ? 'font-bold' : ''}`} onClick={move2Home}>Home</p>
           <p className={`pt-[6px] cursor-pointer ${(pathname?.startsWith('/movie')) ? 'font-bold' : ''}`} onClick={() => move2MoviePage(1)}>Movie</p>
           <p className={`pt-[6px] cursor-pointer ${(pathname?.startsWith('/comic')) ? 'font-bold' : ''}`} onClick={move2Home}>Anime</p>

@@ -52,7 +52,7 @@ const MovieDetailPage = () => {
         {/* Movie Poster */}
         <img
           src={movieData?.poster_path ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}` : '/images/movie_0.png'}
-          className="w-[397px] h-[565px] rounded-tl-lg rounded-tr-lg object-contain"
+          className="w-[397px] h-[565px] object-cover rounded object-contain"
         />
         {/* Movie Details */}
         <div className="flex flex-col justify-start items-start ml-8 gap-8 flex-1">
