@@ -39,12 +39,17 @@ import userController from "../controllers/user.controller.js";
 
 /**
  * @swagger
- * /api/users/me:
+ * /api/users/me/{userId}:
  *   get:
  *     summary: 현재 사용자 정보 조회
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 사용자 ID
  *     responses:
  *       200:
  *         description: 현재 사용자 정보
@@ -218,7 +223,7 @@ import userController from "../controllers/user.controller.js";
 const router = express.Router();
 
 router.get("/", userController.getAllUsers);
-router.get("/me", authMiddleware, userController.getMyProfile);
+router.get("/me/:userId", userController.getMyProfile);
 router.get('/:userId', userController.getUserProfile);
 router.post("/", userController.createUserProfile);
 router.put("/:userId", userController.updateUserProfile);
