@@ -2,7 +2,8 @@ import express from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import userController from "../controllers/user.controller.js";
 
-/** @swagger
+/** 
+ * @swagger
  * tags:
  *   name: Users
  *   description: 사용자 관련 API
@@ -24,7 +25,7 @@ import userController from "../controllers/user.controller.js";
  *               items:
  *                 type: object
  *                 properties:
- *                   _id: 
+ *                   name: 
  *                     type: string
  *                   email:
  *                     type: string
@@ -35,61 +36,62 @@ import userController from "../controllers/user.controller.js";
  *       500:
  *         description: 서버 오류
  */ 
+// /**
+//  * @swagger
+//  * /api/users/me:
+//  *   get:
+//  *     summary: 현재 사용자 정보 조회
+//  *     tags: [Users]
+//  *     security:
+//  *       - bearerAuth: []
+//  *     responses:
+//  *       200:
+//  *         description: 현재 사용자 정보
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: object
+//  *               properties:
+//  *                 name: 
+//  *                   type: string
+//  *                 email:
+//  *                   type: string
+//  *                 nickname:
+//  *                   type: string 
+//  *                 profileImage:
+//  *                   type: string
+//  *                 bannerImage:
+//  *                   type: string
+//  *                 favoriteGenres:
+//  *                   type: array
+//  *                   items:
+//  *                     type: string 
+//  *                 likedMovies:
+//  *                   type: array
+//  *                   items:
+//  *                     type: string
+//  *       401:
+//  *         description: 인증되지 않은 요청
+//  *       404:
+//  *         description: 사용자 정보를 찾을 수 없음
+//  *       500:
+//  *         description: 서버 오류
+//  */ 
+
 /**
  * @swagger
- * /api/users/me:
+ * /api/users/me/{email}:
  *   get:
- *     summary: 현재 사용자 정보 조회
+ *     summary: 내 프로필 조회
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: 현재 사용자 정보
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id: 
- *                   type: string
- *                 email:
- *                   type: string
- *                 nickname:
- *                   type: string 
- *                 profileImage:
- *                   type: string
- *                 bannerImage:
- *                   type: string
- *                 favoriteGenres:
- *                   type: array
- *                   items:
- *                     type: string 
- *                 likedMovies:
- *                   type: array
- *                   items:
- *                     type: string
- *       401:
- *         description: 인증되지 않은 요청
- *       404:
- *         description: 사용자 정보를 찾을 수 없음
- *       500:
- *         description: 서버 오류
- */ 
-
-/** 
- * @swagger
- * /api/users/{userId}:
- *   get:
- *     summary: 특정 사용자 프로필 조회
- *     tags: [Users]
+ *     description: 이메일을 통해 인증 없이 특정 사용자의 프로필을 조회합니다.
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: email
  *         required: true
  *         schema:
  *           type: string
- *         description: 사용자 ID
+ *         description: 사용자 이메일 주소
  *     responses:
  *       200:
  *         description: 사용자 프로필 정보
@@ -98,6 +100,59 @@ import userController from "../controllers/user.controller.js";
  *             schema:
  *               type: object
  *               properties:
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 nickname:
+ *                   type: string
+ *                 profileImage:
+ *                   type: string
+ *                 bannerImage:
+ *                   type: string
+ *                 favoriteGenres:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 likedMovies:
+ *                   type: array
+ *                   items:
+ *                     type: number
+ *                 recentMovies:
+ *                   type: array
+ *                   items:
+ *                     type: number
+ *                 language:
+ *                   type: string
+ *       404:
+ *         description: 사용자 정보를 찾을 수 없음
+ *       500:
+ *         description: 서버 오류
+ */
+
+/** 
+ * @swagger
+ * /api/users/{email}:
+ *   get:
+ *     summary: 특정 사용자 프로필 조회
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: 사용자 email
+ *     responses:
+ *       200:
+ *         description: 사용자 프로필 정보
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
  *                 nickname:
  *                   type: string
  *                 profileImage:
@@ -117,6 +172,7 @@ import userController from "../controllers/user.controller.js";
  *       500:
  *         description: 서버 오류
  */
+
 /**
  * @swagger
  * /api/users:
@@ -129,13 +185,17 @@ import userController from "../controllers/user.controller.js";
  *         application/json:
  *           schema:
  *             type: object
- *             required: [email]
+ *             required: [name, email]
  *             properties:
+ *               name:
+ *                 type: string
  *               email:
  *                 type: string
  *               nickname:
  *                 type: string
  *               profileImage:
+ *                 type: string
+ *               bannerImage:
  *                 type: string
  *               favoriteGenres:
  *                 type: array
@@ -146,7 +206,10 @@ import userController from "../controllers/user.controller.js";
  *     responses:
  *       201:
  *         description: 유저 생성 완료
- *
+ */
+
+/** 
+ * @swagger
  * /api/users/{userId}:
  *   put:
  *     summary: 유저 정보 수정
@@ -174,8 +237,6 @@ import userController from "../controllers/user.controller.js";
  *                 type: array
  *                 items:
  *                   type: string
- *               language:
- *                 type: string
  *     responses:
  *       200:
  *         description: 유저 업데이트 성공
@@ -204,12 +265,12 @@ import userController from "../controllers/user.controller.js";
 const router = express.Router();
 
 router.get("/", userController.getAllUsers);
-router.get("/me", authMiddleware, userController.getMyProfile);
-router.get('/:userId', userController.getUserProfile);
+// router.get("/me", authMiddleware, userController.getMyProfile);
+router.get("/me/:email", userController.getMyProfile);
+router.get('/:email', userController.getUserProfile);
 router.post("/", userController.createUserProfile);
 router.put("/:userId", userController.updateUserProfile);
 router.delete("/:userId", userController.deleteUserProfile);
-// router.put("/:userId", authMiddleware, userController.updateUserProfile);
-// router.delete("/:userId", authMiddleware, userController.deleteUserProfile);
+
 
 export default router;
