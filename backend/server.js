@@ -6,8 +6,9 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger.js';
 import userRoutes from './routes/user.routes.js';
-import comicRoutes from './routes/comic.routes.js';
 import movieRoutes from './routes/movie.routes.js';
+import tmdbRoutes from './routes/tmdb.routes.js';
+import comicRoutes from './routes/comic.routes.js';
 import commentRoutes from './routes/comment.routes.js';
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Routes
 app.use('/api/users', userRoutes)
 app.use('/api/movies', movieRoutes);
+app.use('/api/tmdb', tmdbRoutes);
 app.use('/api/comics', comicRoutes);
 app.use('/api/comics', commentRoutes); // ✅ 변경됨!
 // app.use('/api/users', userRoutes);

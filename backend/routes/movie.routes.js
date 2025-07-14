@@ -1,6 +1,5 @@
 import express from 'express';
 import * as movieController from '../controllers/movie.controller.js';
-import searchMovies from '../tmdb.js';
 
 const router = express.Router();
 /**
@@ -107,41 +106,6 @@ const router = express.Router();
  *         description: 삭제 성공
  */
 
-/**
- * @swagger
- * /api/movies/search:
- *   get:
- *     summary: Search movies using TMDB API
- *     description: Uses The Movie Database (TMDB) API to search for movies based on query.
- *     parameters:
- *       - in: query
- *         name: term
- *         required: true
- *         schema:
- *           type: string
- *         description: Movie title to search for
- *     responses:
- *       200:
- *         description: A list of matching movies from TMDB
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   title:
- *                     type: string
- *                   overview:
- *                     type: string
- *                   release_date:
- *                     type: string
- *       401:
- *         description: Unauthorized access to TMDB API
- *       500:
- *         description: TMDB API error
- */
-
 
 // GET /api/movies
 router.get('/', movieController.getAllMovies);
@@ -154,21 +118,6 @@ router.put('/:id', movieController.updateMovie);
 
 // DELETE /api/movies/:id
 router.delete('/:id', movieController.deleteMovie);
-
-// GET /api/movies/search?q={query}
-router.get('/search', async (req, res) => {
-  const query = req.query.term;
-
-  try {
-    const results = await searchMovies(query);
-    res.status(200).json(results);
-  } catch (err) {
-    console.error('TMDB 검색 오류:', err.message);
-    res.status(err.response?.status || 500).json({
-      error: err.response?.data?.status_message || 'TMDB API Error',
-    });
-  }
-});
 
 
 export default router;

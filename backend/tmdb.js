@@ -22,4 +22,21 @@ async function searchMovies(query) {
   }
 }
 
-export default searchMovies;
+async function getMovieDetails(movieId) {
+  console.log('TMDB 영화 정보 조회:', movieId);
+
+  try {
+    const res = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+      params: {
+        api_key: API_KEY,
+        language: 'ko-KR',
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error('TMDB 검색 오류:', error.message);
+    return null;
+  }
+}
+
+export default { searchMovies, getMovieDetails };
