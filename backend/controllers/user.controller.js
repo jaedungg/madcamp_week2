@@ -3,7 +3,7 @@ import User from "../models/user.model.js";
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({})
-      .select('name email nickname') // 필요한 필드만 선택
+      .select('_id name email nickname') // 필요한 필드만 선택
     if (!users || users.length === 0) {
       return res.status(404).json({ message: "No users found" });
     }
@@ -16,13 +16,9 @@ const getAllUsers = async (req, res) => {
 
 const getMyProfile = async (req, res) => {
   try {
-    const { email } = req.params;
+    const userId = req.user.id;
 
-    if (!email) {
-      return res.status(400).json({ message: 'email 파라미터가 필요합니다.' });
-    }
-
-    const user = await User.findOne({ email }).select('-isAdmin');
+    const user = await User.findById(userId).lean();
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -37,17 +33,19 @@ const getMyProfile = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   try {
-    const { email } = req.params;
+    const { userId } = req.params;
 
-    if (!email) {
-      return res.status(400).json({ message: 'email 파라미터가 필요합니다.' });
-    }
-
-    const user = await User.findOne({ email }).select('nickname profileImage bannerImage favoriteGenres likedMovies');
+    const user = await User.findById(userId).select('nickname profileImage bannerImage favoriteGenres likedMovies');
 
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    res.json(user);
+    res.json({
+      nickname: user.nickname,
+      profileImage: user.profileImagem,
+      bannerImage: user.bannerImage,
+      favoriteGenres: user.favoriteGenres,
+      likedMovies: user.likedMovies, 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: '서버 오류' });
