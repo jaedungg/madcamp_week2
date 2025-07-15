@@ -8,7 +8,7 @@ import MovieVerticalView from './components/MovieVerticalGallery';
 import UserProfile from './components/UserProfile';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { fetchPopularMovies,fetchLatestMovies,getMyProfile } from '../../lib/api';
+import { fetchTopRatedMovies, fetchPopularMovies,fetchLatestMovies,getMyProfile } from '../../lib/api';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -21,6 +21,7 @@ export default function Home() {
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [topRatedMovieIds, setTopRatedMovieIds] = useState<number[]>([]);
   const [latestMovieIds, setLatestMovieIds] = useState<number[]>([]);
   const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
 
@@ -44,6 +45,16 @@ export default function Home() {
       setPopularMovies(data.slice(0, 10));
     };
     fetchPopular();
+  }, []);
+
+  useEffect(() => {
+    const fetchTopRated = async () => {
+      const data = await fetchTopRatedMovies();
+      console.log("Top Rated Movies:", data.slice(0, 10));
+      setTopRatedMovieIds(data.map((movie: any) => movie.id));
+      
+    };
+    fetchTopRated();
   }, []);
 
   useEffect(() => {
@@ -117,7 +128,7 @@ export default function Home() {
             />
           ))}
         </div>
-        <div className='absolute bottom-0 left-0 flex items-center justify-center mx-4 my-4 gap-4'>
+        <div className='absolute bottom-0 left-2 flex items-center justify-center mx-4 my-4 gap-4'>
           {popularMovies[activeIndex] && (
             <Link href={`/movie/${popularMovies[activeIndex].id}`}>
               <RectangleButton icon="document" text="영화 상세 페이지" />
@@ -134,6 +145,7 @@ export default function Home() {
                   scrollRef.current.scrollTo({ left: width * idx, behavior: 'smooth' });
                 }
               }}
+              className={activeIndex != idx ? `hover:opacity-60` : ``}
             >
               <svg
                 width={8}
@@ -158,22 +170,22 @@ export default function Home() {
       </div>
 
       {/* Title & Movie gallery view */}
-      <div className='flex flex-col '>
-        <div className="flex flex-col w-full px-4 pt-2 overflow-hidden">  
-          <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+      <div className='flex flex-col w-full px-6 py-2 gap-8'>
+        <div className="flex flex-col w-full overflow-hidden">  
+          <div className="flex flex-row items-center gap-2 \">
             <img src={"icons/heart.svg"} alt='finger heart' width={32} height={32} />
-            <p className="left-[35px] top-0 text-xl text-left font-bold text-white">
-              마음에 쏙 드실거에요
+            <p className="left-[35px] top-0 text-2xl text-left font-bold text-white">
+              오늘의 TOP 10
             </p>
           </div>
             <div className="overflow-x-auto scrollbar-hide">
-              <MovieVerticalView movieIds={latestMovieIds} />
+              <MovieVerticalView isRated={true} movieIds={topRatedMovieIds} />
             </div>
         </div>
-        <div className="flex flex-col w-full px-4 pt-8 overflow-hidden">  
-          <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+        <div className="flex flex-col w-full overflow-hidden">  
+          <div className="flex flex-row items-center gap-2 ">
             <img src={"icons/clock.svg"} alt='finger heart' width={28} height={28} />
-            <p className="left-[35px] top-0 text-xl text-left font-bold text-white">
+            <p className="left-[35px] top-0 text-2xl text-left font-bold text-white">
               최근 본 영화
             </p>
           </div>
@@ -184,10 +196,10 @@ export default function Home() {
             <MovieVerticalView movieIds={recentViewedIds} />
           </div>
         </div>
-        <div className="flex flex-col w-full px-4 pt-8 pb-4 overflow-hidden">  
-          <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
-            <img src={"icons/heart.svg"} alt='finger heart' width={32} height={32} />
-            <p className="left-[35px] top-0 text-xl text-left font-bold text-white">
+        <div className="flex flex-col w-full overflow-hidden">  
+          <div className="flex flex-row items-center gap-2 ">
+            <img src={"icons/megaphone.svg"} alt='finger heart' width={28} height={28} />
+            <p className="left-[35px] top-0 text-2xl text-left font-bold text-white">
               최신영화
             </p>
           </div>

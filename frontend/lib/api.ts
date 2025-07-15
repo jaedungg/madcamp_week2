@@ -10,6 +10,7 @@ export const searchMovies = async (term: string) => {
 };
 
 export const getMovieDetails = async (movieId: string) => {
+  console.log("getMovieDetails called with movieId:", movieId);
   const response = await axios.get(`${BASE_URL}/api/tmdb/movie/${movieId}`);
   return response.data;
 };
@@ -64,6 +65,12 @@ export const deleteUserProfile = async (userId: string) => {
 export const fetchPopularMovies = async () => {
   const res = await fetch(`${BASE_URL}/api/tmdb/movie/popular`);
   if (!res.ok) throw new Error('Failed to fetch popular movies');
+  return res.json();
+};
+
+export const fetchTopRatedMovies = async () => {
+  const res = await fetch(`${BASE_URL}/api/tmdb/movie/top_rated`);
+  if (!res.ok) throw new Error('Failed to fetch top_rated movies');
   return res.json();
 };
 

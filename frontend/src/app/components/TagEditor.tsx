@@ -63,10 +63,10 @@ function TagEditor({
             <button
               key={tag}
               onClick={() => handleTagToggle(tag)}
-              className={`px-2 py-1 rounded-lg  ${
+              className={`px-2 py-1 rounded-lg hover:bg-white/70 duration-200 ${
                 tempTags.includes(tag)
                   ? 'bg-white text-black '
-                  : 'bg-white/40 text-black '
+                  : 'bg-white/40  text-black '
               }`}
             >
               #{tag}
@@ -74,7 +74,7 @@ function TagEditor({
           ))}
         </div>
         <button
-          className="bg-blue-400/100 text-white px-4 py-2 rounded font-semibold"
+          className="bg-blue-400/100 hover:bg-blue-500/80 duration-200 text-white px-4 py-2 rounded font-semibold"
           onClick={() => {
             handleApply();
             setIsEditingTags(false);

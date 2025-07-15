@@ -10,7 +10,7 @@ import TagEditor from '../components/TagEditor';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-  const [coverImage, setCoverImage] = useState<string>('/images/banner.jpg');
+  const [coverImage, setCoverImage] = useState<string>('/images/background.png');
   const [isEditingName, setIsEditingName] = useState(false);
   const [nickname, setNickname] = useState('');
   const [tags, setTags] = useState<string[]>([]);
@@ -37,6 +37,9 @@ export default function ProfilePage() {
           }
           if (profile?.favoriteGenres) {
             setTags(profile.favoriteGenres);
+          }
+          if (profile?.recentMovies && Array.isArray(profile.recentMovies)) {
+            setRecentViewedIds(profile.recentMovies);
           }
         }
       } catch (err) {
@@ -147,7 +150,7 @@ export default function ProfilePage() {
       <div className='w-full flex flex-col pt-34 z-30 items-start justify-start'>
         <div className='flex w-full z-10 flex-row justify-between items-end'>
           {/* Profile */}
-          <div className='flex flex-row items-end gap-6 z-10x'>
+          <div className='flex flex-row items-end gap-4 z-10x'>
             {/* Profile Image */}
             <label className="cursor-pointer">
               <input
@@ -163,8 +166,8 @@ export default function ProfilePage() {
               />
             </label>
             {/* name & email */}
-            <div className='flex flex-col items-start justify-start gap-2 pb-2'>
-              <div className="inline-flex items-center gap-2 ">
+            <div className='flex flex-col items-start justify-start gap-1.5 pb-2'>
+              <div className="inline-flex items-center gap-2.5 ">
                 {isEditingName ? (
                   <input
                     className={`text-3xl font-bold text-left text-white rounded bg-transparent border-b border-white font-mono whitespace-nowrap px-1`}
@@ -186,12 +189,12 @@ export default function ProfilePage() {
                   </p>
                 )}
                 {!isEditingName && (
-                <button onClick={() => setIsEditingName(true)} aria-label="Edit nickname" className="bg-white/20 p-1.5 rounded-full z-10">
+                <button onClick={() => setIsEditingName(true)} aria-label="Edit nickname" className="bg-white/20 p-1.5 rounded-full hover:bg-white/40 transition-colors duration-200">
                   <img src={"icons/edit.svg"} alt='edit nickname' width={12} height={12} />
                 </button>
                 )}
               </div>
-              <p className="text-lg font-semibold text-left text-white">
+              <p className="text-[20px] font-semibold text-left text-white">
                 {session?.user?.email ?? 'madcamp_week2@kaist.co.kr'}
               </p>
             </div>
@@ -199,7 +202,7 @@ export default function ProfilePage() {
           {/* Logout button */}
           <div
             onClick={() => signOut({ callbackUrl: '/login' })}
-            className="flex items-center gap-1 rounded-md bg-white/40 border border-white/40 hover:bg-white/40 hover:shadow-md transition-all duration-200 px-4 py-2 cursor-pointer"
+            className="flex items-center gap-1 mb-1 rounded-md bg-white/40 border border-white/40 hover:bg-white/20 hover:border-white/80 transition-all duration-200 px-4 py-1.5 cursor-pointer"
           >
             <img src="/icons/logout.svg" alt='logout button' className='w-[16px]'/>
             <p className="text-base font-bold text-gray-300">
@@ -211,12 +214,12 @@ export default function ProfilePage() {
 
       <div className='flex flex-col gap-8'>
         {/* Tag */}
-        <div className="flex flex-col pt-10 text-3xl font-semibold text-left text-white">
-          <div className='flex flex-row items-center gap-2'>
+        <div className="flex flex-col pt-8 text-3xl font-semibold text-left text-white">
+          <div className='flex flex-row items-center gap-2.5'>
             <p>Tags</p>
             <button
               onClick={() => setIsEditingTags(true)}
-              className="bg-white/20 p-1.5 rounded-full z-10"
+              className="bg-white/20 p-1.5 rounded-full hover:bg-white/40 transition-colors duration-200"
               aria-label="Edit tags"
               >
               <img src="icons/edit.svg" alt="edit tags" width={12} height={12} />
