@@ -61,11 +61,8 @@ async function generateTTSSteps(req, res) {
   }
 }
 
-// POST /api/tts/{movieId}/{level}/{step}
+// POST /api/tts/{movieId}
 async function generateTTS(req, res) {
-  const { movieId, level, step } = req.params;
-  console.log("TTS 요청:", { movieId, level, step });
-  
   const { text } = req.body;
   if (!text) return res.status(400).json({ error: "No text provided" });
 
@@ -81,7 +78,7 @@ async function generateTTS(req, res) {
   try {
     const [response] = await client.synthesizeSpeech(request);
 
-    const filename = `${movieId}_${level}_${step}.mp3`;
+    const filename = `summary.mp3`;
     const ttsPath = path.join(__dirname, "../../frontend/public/tts");
     const filePath = path.join(ttsPath, filename);
 

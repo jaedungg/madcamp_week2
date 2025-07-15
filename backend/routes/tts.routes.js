@@ -48,31 +48,11 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /api/tts/{movieId}/{level}/{step}:
+ * /api/tts/:
  *   post:
  *     summary: Generate TTS audio for a movie step
  *     tags: [TTS]
  *     description: Generates TTS audio for a specific movie step using Google Cloud Text-to-Speech.
- *     parameters:
- *       - in: path
- *         name: movieId
- *         required: true
- *         schema:
- *           type: string
- *         description: TMDB 기준 영화 ID
- *       - in: path
- *         name: level
- *         required: true
- *         schema:
- *           type: number
- *           enum: [1, 2]
- *         description: 만화 레벨 (1 또는 2)
- *       - in: path
- *         name: step
- *         required: true
- *         schema:
- *           type: number
- *         description: 만화 단계 (step number)
  *     requestBody:
  *       required: true
  *       content:
@@ -105,7 +85,7 @@ const router = express.Router();
 router.post("/:movieId/:level", ttsController.generateTTSSteps);
 
 // POST /api/tts/{movieId}/{level}/{step}
-router.post("/:movieId/:level/:step", ttsController.generateTTS);
+router.post("/", ttsController.generateTTS);
 
 export default router;
 
