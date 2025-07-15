@@ -1,7 +1,8 @@
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
-import clientPromise from "../../../lib/mongodb"
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import KakaoProvider from "next-auth/providers/kakao"; // ✅ 추가
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "../../../lib/mongodb";
 
 export default NextAuth({
   providers: [
@@ -12,33 +13,33 @@ export default NextAuth({
         params: { prompt: "select_account" },
       },
     }),
+    KakaoProvider({
+      clientId: process.env.KAKAO_CLIENT_ID,          // ✅ REST API 키
+      clientSecret: process.env.KAKAO_CLIENT_SECRET,  // ✅ Client Secret 필수
+    }),
   ],
-  adapter: MongoDBAdapter(clientPromise), // 사용자 정보는 DB에 저장됨
+  adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt", // JWT 기반 세션 사용
+    strategy: "jwt",
   },
   pages: {
     signIn: '/login',
   },
   jwt: {
     encryption: false,
-    // secret: process.env.NEXTAUTH_SECRET,
   },
-  // pages: {
-  //   error: "/auth", // 에러 페이지 경로
-  // },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
       }
-    
+
       const client = await clientPromise;
       const db = client.db();
       const dbUser = await db.collection("users").findOne({ email: token.email });
-    
+
       if (dbUser) {
         token.nickname = dbUser.nickname || dbUser.name;
     
@@ -52,7 +53,7 @@ export default NextAuth({
           token.nickname = nickname;
         }
       }
-    
+
       return token;
     },
     async session({ session, token }) {
@@ -61,26 +62,15 @@ export default NextAuth({
         session.user.id = token.id;
         // session.user.nickname = token.nickname || token.name; // nickname이 없으면 name 사용
       }
-      // session.user.id = token.id
-      // session.user.email = token.email
       console.log("세션 콜백:", session);
-      return session
+      return session;
     },
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       try {
         const client = await clientPromise;
-        if (!client) {
-          throw new Error("clientPromise 반환 실패");
-        }
-
         const db = client.db();
         const existingUser = await db.collection("users").findOne({ email: user.email });
 
-        // if (!existingUser) {
-        //   console.log("❌ 신규 유저 로그인 차단:", user.email);
-        //   return false;
-        // }
-        // 신규 유저인지 확인
         if (!existingUser) {
           console.log("✅✅✅ 신규 유저 로그인:", user.email);
         } else {
@@ -92,6 +82,6 @@ export default NextAuth({
         console.error("DB 오류:", error);
         return false;
       }
-    }
+    },
   },
-})
+});

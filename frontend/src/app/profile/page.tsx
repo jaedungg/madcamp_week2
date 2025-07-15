@@ -4,6 +4,7 @@ import MovieVerticalGallery from '../components/MovieVerticalGallery';
 import { useSession, signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import{ updateUserProfile, getMyProfile } from '../../../lib/api';
+import { useProfileStore } from '../../../store/profileStore';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -11,6 +12,8 @@ export default function ProfilePage() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [nickname, setNickname] = useState('');
   const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
+  const profileImage = useProfileStore((state) => state.profileImage);
+  const setProfileImage = useProfileStore((state) => state.setProfileImage);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,6 +22,9 @@ export default function ProfilePage() {
           const profile = await getMyProfile(session.user.id);
           if (profile?.nickname) {
             setNickname(profile.nickname);
+          }
+          if (profile?.bannerImage) {
+            setProfileImage(profile.profileImage || '/images/profile.png');
           }
           if (profile?.bannerImage) {
             setCoverImage(profile.bannerImage);
@@ -73,6 +79,25 @@ export default function ProfilePage() {
     }
   };
 
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("📂 파일 선택됨");
+    const file = e.target.files?.[0];
+    if (file) {
+    console.log("📸 파일 있음:", file.name);
+      const reader = new FileReader();
+      reader.onload = async () => {
+        if (typeof reader.result === 'string') {
+          setProfileImage(reader.result);
+          console.log("🪄 저장할 프로필 이미지 URL:", reader.result.slice(0, 100));
+          if (session?.user?.id) {
+            await updateUserProfile(session.user.id, { profileImage: reader.result }, ); // 서버가 있어야 가능
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleNicknameSave = async () => {
     if (session?.user?.id && nickname) {
       await updateUserProfile(session.user.id, { nickname });
@@ -120,15 +145,23 @@ export default function ProfilePage() {
           </svg>
         </button>
       </div>
-      <img
-        src={session?.user?.image ?? '/images/profile.png'}
-        alt="User profile image"
-        className="w-[145px] h-[145px] absolute left-[30px] top-[124px] rounded-2xl object-cover"
-      />
-      <div className="absolute left-[200px] top-[211px] inline-flex items-center gap-2 z-10">
+      <label className="cursor-pointer">
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleProfileImageChange}
+        />
+        <img
+          src={profileImage}
+          alt="User profile image"
+          className="w-[165px] h-[165px] absolute left-[30px] top-[124px] rounded-2xl object-cover"
+        />
+      </label>
+      <div className="absolute left-[210px] top-[224px] inline-flex items-center gap-2 z-10">
         {isEditingName ? (
           <input
-            className={`text-3xl font-semibold text-left text-white rounded bg-transparent border-b border-white font-mono whitespace-nowrap px-1`}
+            className={`text-3xl font-bold text-left text-white rounded bg-transparent border-b border-white font-mono whitespace-nowrap px-1`}
             style={{ width: `${nickname.length * 1.6 + 2}ch` }}
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
@@ -172,7 +205,7 @@ export default function ProfilePage() {
           </button>
         )}
       </div>
-      <p className="w-[310px] h-[21px] absolute left-[200px] top-[247px] text-sm font-semibold text-left text-white">
+      <p className="w-[310px] h-[21px] absolute left-[210px] top-[260px] text-lg font-semibold text-left text-white">
         {session?.user?.email ?? 'madcamp_week2@kaist.co.kr'}
       </p>
     <div className="w-full h-[508px] absolute left-1/2 -translate-x-1/2 top-[416px] overflow-hidden px-4">
@@ -204,16 +237,16 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <p className="w-[85px] h-9 absolute left-[30px] top-[276px] text-3xl font-semibold text-left text-white">
+      <p className="w-[85px] h-9 pt-8 absolute left-[30px] top-[276px] text-3xl font-semibold text-left text-white">
         Tags
       </p>
-      <div className="flex justify-start items-center absolute left-[30px] top-[318px] gap-2.5">
+      <div className="flex  pt-8 justify-start items-center absolute left-[30px] top-[318px] gap-2">
         {['SF', 'Action', 'Fantasy', 'Horror', 'Anime', 'melodrama','drama'].map(tag => (
           <div
             key={tag}
-            className="flex justify-center items-center flex-grow-0 flex-shrink-0 h-5 relative px-[5px] py-[3px] rounded-[10px] bg-white/50 border border-black/20"
+            className="flex justify-center items-center relative px-[8px] py-[2px] rounded-[10px] bg-white/50 border border-black/20"
           >
-            <p className="flex-grow-0 flex-shrink-0 text-[10px] font-medium text-left text-black">#{tag}</p>
+            <p className="text-[16px] font-bold text-left text-black">#{tag}</p>
           </div>
         ))}
       </div>

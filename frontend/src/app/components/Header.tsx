@@ -4,6 +4,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useState , useEffect} from 'react';
 import { searchMovies, getMovieDetails, getMyProfile } from '../../../lib/api';
 import Link from 'next/link';
+import { useProfileStore } from '../../../store/profileStore';
 
 
 export default function Header() {
@@ -17,6 +18,25 @@ export default function Header() {
     const [searchQuery, setSearchQuery] = useState('');
     const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
     const [searchResults, setSearchResults] = useState<MovieResult[]>([]);
+    const profileImage = useProfileStore((state) => state.profileImage);
+    const setProfileImage = useProfileStore((state) => state.setProfileImage);
+
+
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          if (session?.user?.id) {
+            const profile = await getMyProfile(session.user.id);
+            if (profile?.profileImage) {
+              setProfileImage(profile.profileImage || '/images/profile.png');
+            }
+          }
+        } catch (err) {
+          console.error('프로필 불러오기 실패:', err);
+        }
+      };
+      fetchProfile();
+    }, [session?.user.id]);
 
     interface MovieResult {
       id: number;
@@ -95,8 +115,8 @@ export default function Header() {
       }}
     >
       {/* 왼쪽 메뉴 */}
-      <div className="flex items-center text-lg">
-        <div className="flex items-center gap-2 px-2 cursor-pointer" onClick={() => move2Home()}>
+      <div className="flex items-center text-xl">
+        <div className="flex items-center gap-2 px-2 pl-3 cursor-pointer" onClick={() => move2Home()}>
           <img src="/icons/logo2.svg" alt="Globe Icon" className="h-10 object-contain pt-[0px] ml-[-15px]" />
         </div>
         <div className="flex items-center gap-x-5">
@@ -154,8 +174,8 @@ export default function Header() {
         {/* 프로필 원 */}
         <div onClick={() => router.push('/profile')}>
           <img 
-            className="cursor-pointer rounded-full" 
-            src={user?.image ?? "/images/profile.png"}
+            className="w-[32px] h-[32px] cursor-pointer rounded-full object-cover" 
+            src={profileImage}
             alt="Profile image" width={32} height={32} />
         </div>
       </div>
