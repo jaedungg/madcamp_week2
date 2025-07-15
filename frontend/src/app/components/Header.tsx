@@ -2,7 +2,8 @@
 import { useSession, signOut } from 'next-auth/react'
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useState , useEffect} from 'react';
-import { searchMovies, getMovieDetails } from '../../../lib/api';
+import { searchMovies, getMovieDetails, getMyProfile } from '../../../lib/api';
+import Link from 'next/link';
 
 
 export default function Header() {
@@ -14,6 +15,8 @@ export default function Header() {
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
+    const [searchResults, setSearchResults] = useState<MovieResult[]>([]);
 
     interface MovieResult {
       id: number;
@@ -21,7 +24,7 @@ export default function Header() {
       poster_path?: string;
       // 필요한 필드를 여기에 추가
     }
-    const [searchResults, setSearchResults] = useState<MovieResult[]>([]);
+    
 
     const toggleSearch = () => {
       setIsSearchOpen(!isSearchOpen);
@@ -54,6 +57,35 @@ export default function Header() {
       }
     }, [searchQuery]);
 
+    // 5초 후 검색바 자동 닫힘
+    useEffect(() => {
+      if (!isSearchOpen) return;
+      const timeoutId = setTimeout(() => {
+        setIsSearchOpen(false);
+      }, 10000);
+      return () => clearTimeout(timeoutId);
+    }, [isSearchOpen, searchQuery]);
+
+    useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (session?.user?.id) {
+        const profile = await getMyProfile(session.user.id)
+        if (Array.isArray(profile?.recentMovies)) {
+          const ids = profile.recentMovies;
+          setRecentViewedIds(ids);
+        } else {
+          console.warn("❌ profile.recentMovies가 배열이 아님:", profile?.recentMovies);
+        }
+      }
+      } catch (error) {
+        console.error('최근 본 영화 불러오기 실패:', error);
+      }
+    };
+    fetchProfile();
+  }, []);
+    
+
   return (
     <header
       className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4"
@@ -65,11 +97,13 @@ export default function Header() {
       {/* 왼쪽 메뉴 */}
       <div className="flex items-center text-lg">
         <div className="flex items-center gap-2 px-2 cursor-pointer" onClick={() => move2Home()}>
-          <img src="/icons/logo2.svg" alt="Globe Icon" className="h-8 object-contain pt-[2px]" />
+          <img src="/icons/logo2.svg" alt="Globe Icon" className="h-10 object-contain pt-[0px] ml-[-15px]" />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-x-5">
           <p className={`pt-[6px] cursor-pointer ${(pathname == '/') ? 'font-bold' : ''}`} onClick={move2Home}>Home</p>
-          <p className={`pt-[6px] cursor-pointer ${(pathname?.startsWith('/movie')) ? 'font-bold' : ''}`} onClick={() => move2MoviePage(1)}>Movie</p>
+          <Link key={recentViewedIds[0]} href={`/movie/${recentViewedIds[0]}`}>
+            <p className={`pt-[6px] cursor-pointer ${(pathname?.startsWith('/movie')) ? 'font-bold' : ''}`}>Movie</p>
+          </Link>
           <p className={`pt-[6px] cursor-pointer ${(pathname?.startsWith('/comic')) ? 'font-bold' : ''}`} onClick={move2Home}>Anime</p>
         </div>
       </div>

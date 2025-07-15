@@ -91,7 +91,7 @@ export default function ProfilePage() {
         />
         <img
           src={coverImage}
-          className="w-full max-w-[2500px] h-[200px] absolute left-1/2 -translate-x-1/2 object-cover"
+          className="w-full h-[200px] absolute left-1/2 -translate-x-1/2 object-cover"
           alt="Cover"
         />
       </label>
@@ -123,9 +123,9 @@ export default function ProfilePage() {
       <img
         src={session?.user?.image ?? '/images/profile.png'}
         alt="User profile image"
-        className="w-[145px] h-[145px] absolute left-[82px] top-[124px] rounded-2xl object-cover"
+        className="w-[145px] h-[145px] absolute left-[30px] top-[124px] rounded-2xl object-cover"
       />
-      <div className="absolute left-[244px] top-[211px] inline-flex items-center gap-2 z-10">
+      <div className="absolute left-[200px] top-[211px] inline-flex items-center gap-2 z-10">
         {isEditingName ? (
           <input
             className="text-3xl font-semibold text-left text-white rounded bg-transparent border-b border-white font-mono whitespace-nowrap w-fit min-w-0 w-auto"
@@ -166,11 +166,11 @@ export default function ProfilePage() {
           </button>
         )}
       </div>
-      <p className="w-[310px] h-[21px] absolute left-[244px] top-[247px] text-sm font-semibold text-left text-white">
+      <p className="w-[310px] h-[21px] absolute left-[200px] top-[247px] text-sm font-semibold text-left text-white">
         {session?.user?.email ?? 'madcamp_week2@kaist.co.kr'}
       </p>
     <div className="w-full h-[508px] absolute left-1/2 -translate-x-1/2 top-[416px] overflow-hidden px-4">
-        <div className="w-[305px] h-9 absolute left-[91px] top-0">
+        <div className="w-[305px] h-9 absolute left-[30px] top-0">
           <p className="absolute left-[35px] top-0 text-3xl font-bold text-left text-white">
             최근 본 영화 리스트
           </p>
@@ -192,16 +192,16 @@ export default function ProfilePage() {
             />
           </svg>
         </div>
-        <div className="w-full overflow-x-auto mt-[57px] pl-[91px]">
+        <div className="w-full overflow-x-auto mt-[57px] pl-[30px]">
           <div className="flex gap-2 min-w-fit">
             <MovieVerticalGallery movieIds={recentViewedIds} />
           </div>
         </div>
       </div>
-      <p className="w-[85px] h-9 absolute left-[93px] top-[276px] text-3xl font-semibold text-left text-white">
+      <p className="w-[85px] h-9 absolute left-[30px] top-[276px] text-3xl font-semibold text-left text-white">
         Tags
       </p>
-      <div className="flex justify-start items-center absolute left-[91px] top-[318px] gap-2.5">
+      <div className="flex justify-start items-center absolute left-[30px] top-[318px] gap-2.5">
         {['SF', 'Action', 'Fantasy', 'Horror', 'Anime', 'melodrama','drama'].map(tag => (
           <div
             key={tag}

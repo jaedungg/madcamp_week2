@@ -50,6 +50,7 @@ export const updateUserProfile = async (userId: string, data: {
   bannerImage?: string;
   favoriteGenres?: string[];
   language?: string;
+  recentMovies?: string[];
 }) => {
   const response = await axios.put(`${BASE_URL}/api/users/${userId}`, data);
   return response.data;

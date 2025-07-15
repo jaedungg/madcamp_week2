@@ -1,6 +1,6 @@
 'use client';
 
-import{ useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { getMovieDetails } from '../../../lib/api';
 
@@ -14,26 +14,35 @@ type MovieVerticalViewProps = {
 };
 
 export default function MovieVerticalView({ movieIds }: MovieVerticalViewProps) {
+  const uniqueMovieIds = [...new Set(movieIds)];
   const [movies, setMovies] = useState<Movie[]>([]);
+  const cacheRef = useRef<Map<number, Movie>>(new Map());
 
   useEffect(() => {
     const fetchMovies = async () => {
-      const results = await Promise.all(
-        movieIds
-          .filter((id) => id != null)
-          .map((id) => getMovieDetails(id.toString()))
-      );
-      setMovies(results);
+      const newMovies: Movie[] = [];
+
+      for (const id of uniqueMovieIds) {
+        if (cacheRef.current.has(id)) {
+          newMovies.push(cacheRef.current.get(id)!);
+        } else {
+          const movie = await getMovieDetails(id.toString());
+          cacheRef.current.set(id, movie);
+          newMovies.push(movie);
+        }
+      }
+
+      setMovies(newMovies);
     };
 
-    if (movieIds.length > 0) fetchMovies();
-  }, [movieIds]);
+    if (uniqueMovieIds.length > 0) fetchMovies();
+  }, [uniqueMovieIds.join(',')]);
 
   return (
     <div className="w-full scrollbar-hide overflow-x-auto">
       <div className="flex gap-4 py-4 w-max">
         {movies.map((movie) => (
-          <Link key={movie.id} href={`/movie/${movie.id}`}>
+          <Link key={`movie-${movie.id}`} href={`/movie/${movie.id}`}>
             <img
               src={movie.poster_path 
                 ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
