@@ -4,6 +4,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useState , useEffect} from 'react';
 import { searchMovies, getMovieDetails, getMyProfile } from '../../../lib/api';
 import Link from 'next/link';
+import { useProfileStore } from '../../../store/profileStore';
 
 
 export default function Header() {
@@ -17,7 +18,8 @@ export default function Header() {
     const [searchQuery, setSearchQuery] = useState('');
     const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
     const [searchResults, setSearchResults] = useState<MovieResult[]>([]);
-    const [profileImage, setprofileImage] = useState<string>(session?.user.image || '/images/profile.png');
+    const profileImage = useProfileStore((state) => state.profileImage);
+    const setProfileImage = useProfileStore((state) => state.setProfileImage);
 
 
     useEffect(() => {
@@ -26,7 +28,7 @@ export default function Header() {
           if (session?.user?.id) {
             const profile = await getMyProfile(session.user.id);
             if (profile?.profileImage) {
-              setprofileImage(profile.profileImage || '/images/profile.png');
+              setProfileImage(profile.profileImage || '/images/profile.png');
             }
           }
         } catch (err) {

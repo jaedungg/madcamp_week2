@@ -4,14 +4,16 @@ import MovieVerticalGallery from '../components/MovieVerticalGallery';
 import { useSession, signOut } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import{ updateUserProfile, getMyProfile } from '../../../lib/api';
+import { useProfileStore } from '../../../store/profileStore';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
-  const [profileImage, setprofileImage] = useState<string>(session?.user.image || '/images/profile.png');
   const [coverImage, setCoverImage] = useState<string>('/images/banner.jpg');
   const [isEditingName, setIsEditingName] = useState(false);
   const [nickname, setNickname] = useState('');
   const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
+  const profileImage = useProfileStore((state) => state.profileImage);
+  const setProfileImage = useProfileStore((state) => state.setProfileImage);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,7 +24,7 @@ export default function ProfilePage() {
             setNickname(profile.nickname);
           }
           if (profile?.bannerImage) {
-            setprofileImage(profile.profileImage || '/images/profile.png');
+            setProfileImage(profile.profileImage || '/images/profile.png');
           }
           if (profile?.bannerImage) {
             setCoverImage(profile.bannerImage);
@@ -85,7 +87,7 @@ export default function ProfilePage() {
       const reader = new FileReader();
       reader.onload = async () => {
         if (typeof reader.result === 'string') {
-          setprofileImage(reader.result);
+          setProfileImage(reader.result);
           console.log("🪄 저장할 프로필 이미지 URL:", reader.result.slice(0, 100));
           if (session?.user?.id) {
             await updateUserProfile(session.user.id, { profileImage: reader.result }, ); // 서버가 있어야 가능
