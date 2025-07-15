@@ -81,7 +81,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="w-full h-[832px] relative overflow-hidden bg-black mx-auto px-4">
+    <div className="w-full min-h-screen relative overflow-x-hidden bg-black mx-auto px-4 pb-8">
       <label className="cursor-pointer">
         <input
           type="file"
@@ -128,10 +128,16 @@ export default function ProfilePage() {
       <div className="absolute left-[200px] top-[211px] inline-flex items-center gap-2 z-10">
         {isEditingName ? (
           <input
-            className="text-3xl font-semibold text-left text-white rounded bg-transparent border-b border-white font-mono whitespace-nowrap w-fit min-w-0 w-auto"
+            className={`text-3xl font-semibold text-left text-white rounded bg-transparent border-b border-white font-mono whitespace-nowrap px-1`}
+            style={{ width: `${nickname.length * 1.6 + 2}ch` }}
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             onBlur={handleNicknameSave}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleNicknameSave();
+              }
+            }}
             autoFocus
             maxLength={10}
           />
