@@ -115,8 +115,8 @@ export default function Header() {
       }}
     >
       {/* 왼쪽 메뉴 */}
-      <div className="flex items-center text-lg">
-        <div className="flex items-center gap-2 px-2 cursor-pointer" onClick={() => move2Home()}>
+      <div className="flex items-center text-xl">
+        <div className="flex items-center gap-2 px-2 pl-3 cursor-pointer" onClick={() => move2Home()}>
           <img src="/icons/logo2.svg" alt="Globe Icon" className="h-10 object-contain pt-[0px] ml-[-15px]" />
         </div>
         <div className="flex items-center gap-x-5">
