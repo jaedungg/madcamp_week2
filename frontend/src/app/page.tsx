@@ -160,7 +160,7 @@ export default function Home() {
       {/* Title & Movie gallery view */}
       <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
         <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
-          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <img src={"icons/heart.svg"} alt='finger heart' width={25} height={25} />
           <p className="left-[35px] top-0 text-xl text-left text-white">
             마음에 쏙 드실거에요
           </p>
@@ -171,7 +171,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
         <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
-          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <img src={"icons/clock.svg"} alt='finger heart' width={25} height={25} />
           <p className="left-[35px] top-0 text-xl text-left text-white">
             최근 본 영화
           </p>
@@ -182,7 +182,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
         <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
-          <img src={"icons/fingerheart.svg"} alt='finger heart' width={20} height={20} />
+          <img src={"icons/heart.svg"} alt='finger heart' width={25} height={25} />
           <p className="left-[35px] top-0 text-xl text-left text-white">
             최신영화
           </p>
