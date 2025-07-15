@@ -17,6 +17,24 @@ export default function Header() {
     const [searchQuery, setSearchQuery] = useState('');
     const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
     const [searchResults, setSearchResults] = useState<MovieResult[]>([]);
+    const [profileImage, setprofileImage] = useState<string>(session?.user.image || '/images/profile.png');
+
+
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          if (session?.user?.id) {
+            const profile = await getMyProfile(session.user.id);
+            if (profile?.profileImage) {
+              setprofileImage(profile.profileImage || '/images/profile.png');
+            }
+          }
+        } catch (err) {
+          console.error('프로필 불러오기 실패:', err);
+        }
+      };
+      fetchProfile();
+    }, [session?.user.id]);
 
     interface MovieResult {
       id: number;
@@ -154,8 +172,8 @@ export default function Header() {
         {/* 프로필 원 */}
         <div onClick={() => router.push('/profile')}>
           <img 
-            className="cursor-pointer rounded-full" 
-            src={user?.image ?? "/images/profile.png"}
+            className="w-[32px] h-[32px] cursor-pointer rounded-full object-cover" 
+            src={profileImage}
             alt="Profile image" width={32} height={32} />
         </div>
       </div>
