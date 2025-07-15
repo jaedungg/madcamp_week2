@@ -30,20 +30,36 @@ export default NextAuth({
   // },
   callbacks: {
     async jwt({ token, user }) {
-      // JWT 토큰에 사용자 정보를 추가
       if (user) {
-        console.log("JWT user:", user);
-        token.id = user.id
-        token.email = user.email
-        // token.name = user.name
+        token.id = user.id;
+        token.email = user.email;
       }
-      console.log("JWT 콜백:", token)
-      return token
+    
+      const client = await clientPromise;
+      const db = client.db();
+      const dbUser = await db.collection("users").findOne({ email: token.email });
+    
+      if (dbUser) {
+        token.nickname = dbUser.nickname || dbUser.name;
+    
+        // nickname 없으면 DB에 저장
+        if (!dbUser.nickname) {
+          const nickname = dbUser.name;
+          await db.collection("users").updateOne(
+            { email: token.email },
+            { $set: { nickname } }
+          );
+          token.nickname = nickname;
+        }
+      }
+    
+      return token;
     },
     async session({ session, token }) {
       // 세션에 JWT 토큰 정보를 추가
       if (token?.id) {
         session.user.id = token.id;
+        // session.user.nickname = token.nickname || token.name; // nickname이 없으면 name 사용
       }
       // session.user.id = token.id
       // session.user.email = token.email
@@ -64,8 +80,13 @@ export default NextAuth({
         //   console.log("❌ 신규 유저 로그인 차단:", user.email);
         //   return false;
         // }
+        // 신규 유저인지 확인
+        if (!existingUser) {
+          console.log("✅✅✅ 신규 유저 로그인:", user.email);
+        } else {
+          console.log("✅✅✅ 기존 유저 로그인:", user.email);
+        }
 
-        console.log("✅ 기존 유저 로그인 허용:", user.email);
         return true;
       } catch (error) {
         console.error("DB 오류:", error);
