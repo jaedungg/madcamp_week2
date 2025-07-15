@@ -129,7 +129,7 @@ export default function Header() {
       </div>
 
       {/* 오른쪽 메뉴 */}
-      <div className="relative flex items-center gap-4">
+      <div className="relative flex items-center gap-4 pt-1">
         {/* 검색 아이콘 */}
         <div className='flex items-center gap-2'>
           {isSearchOpen && (

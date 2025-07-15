@@ -158,36 +158,41 @@ export default function Home() {
       </div>
 
       {/* Title & Movie gallery view */}
-      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
-        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
-          <img src={"icons/heart.svg"} alt='finger heart' width={25} height={25} />
-          <p className="left-[35px] top-0 text-xl text-left text-white">
-            마음에 쏙 드실거에요
-          </p>
-        </div>
-          <div className="overflow-x-auto scrollbar-hide">
-            <MovieVerticalView movieIds={latestMovieIds} />
+      <div className='flex flex-col '>
+        <div className="flex flex-col w-full px-4 pt-2 overflow-hidden">  
+          <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+            <img src={"icons/heart.svg"} alt='finger heart' width={32} height={32} />
+            <p className="left-[35px] top-0 text-xl text-left font-bold text-white">
+              마음에 쏙 드실거에요
+            </p>
           </div>
-      </div>
-      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
-        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
-          <img src={"icons/clock.svg"} alt='finger heart' width={25} height={25} />
-          <p className="left-[35px] top-0 text-xl text-left text-white">
-            최근 본 영화
-          </p>
+            <div className="overflow-x-auto scrollbar-hide">
+              <MovieVerticalView movieIds={latestMovieIds} />
+            </div>
         </div>
+        <div className="flex flex-col w-full px-4 pt-8 overflow-hidden">  
+          <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+            <img src={"icons/clock.svg"} alt='finger heart' width={28} height={28} />
+            <p className="left-[35px] top-0 text-xl text-left font-bold text-white">
+              최근 본 영화
+            </p>
+          </div>
           <div className="overflow-x-auto scrollbar-hide">
+            {recentViewedIds.length == 0 && (
+              <p className="text-xl text-white/50 py-2">최근 본 영화가 없습니다.</p>
+            )}
             <MovieVerticalView movieIds={recentViewedIds} />
           </div>
-      </div>
-      <div className="flex flex-col w-full h-[508px] px-4 overflow-hidden">  
-        <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
-          <img src={"icons/heart.svg"} alt='finger heart' width={25} height={25} />
-          <p className="left-[35px] top-0 text-xl text-left text-white">
-            최신영화
-          </p>
         </div>
-          <MovieVerticalView movieIds={latestMovieIds} />
+        <div className="flex flex-col w-full px-4 pt-8 pb-4 overflow-hidden">  
+          <div className="flex flex-row items-center gap-2 w-[305px] h-[32px] left-2.5 top-0">
+            <img src={"icons/heart.svg"} alt='finger heart' width={32} height={32} />
+            <p className="left-[35px] top-0 text-xl text-left font-bold text-white">
+              최신영화
+            </p>
+          </div>
+            <MovieVerticalView movieIds={latestMovieIds} />
+        </div>
       </div>
     </div>
   );
