@@ -26,7 +26,7 @@ const LoginPage = () => {
           <div className="flex flex-col justify-center items-center flex-grow-0 flex-shrink-0 relative gap-3">
             <img src="/icons/login_icon.svg" alt="Globe Icon" width={88} />
             <p className="flex-grow-0 flex-shrink-0 w-[453px] text-[28px] font-bold text-center text-white">
-              Log in to ReelRecap
+              Log in to Clappo
             </p>
           </div>
 
@@ -45,6 +45,22 @@ const LoginPage = () => {
               <img src="images/google_logo.png" className="flex-grow-0 flex-shrink-0 w-6 h-6 object-cover" />
               <p className="flex-grow-0 flex-shrink-0 text-base font-semibold text-center text-white">
                 Continue with Google
+              </p>
+              <div className="flex-grow-0 flex-shrink-0 w-px h-0.5 relative overflow-hidden" />
+            </div>
+            <div 
+              className="flex cursor-pointer justify-center items-center flex-grow-0 flex-shrink-0 relative gap-2.5 px-5 py-2 rounded-full border border-white"
+              onClick={async () => {
+                const res = await signIn('kakao');
+                console.log("signIn result", res);
+                if (res?.ok) {
+                  window.location.href = '/?fromLogin=true';
+                }
+              }}
+            >
+              <img src="images/kakao_logo.png" className="flex-grow-0 flex-shrink-0 w-6 h-6 object-cover" />
+              <p className="flex-grow-0 flex-shrink-0 text-base font-semibold text-center text-white">
+                Continue with KaKao
               </p>
               <div className="flex-grow-0 flex-shrink-0 w-px h-0.5 relative overflow-hidden" />
             </div>
