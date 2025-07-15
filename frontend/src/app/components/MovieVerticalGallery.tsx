@@ -14,26 +14,27 @@ type MovieVerticalViewProps = {
 };
 
 export default function MovieVerticalView({ movieIds }: MovieVerticalViewProps) {
+  const uniqueMovieIds = [...new Set(movieIds)];
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
     const fetchMovies = async () => {
       const results = await Promise.all(
-        movieIds
+        uniqueMovieIds
           .filter((id) => id != null)
           .map((id) => getMovieDetails(id.toString()))
       );
       setMovies(results);
     };
 
-    if (movieIds.length > 0) fetchMovies();
-  }, [movieIds]);
+    if (uniqueMovieIds.length > 0) fetchMovies();
+  }, [uniqueMovieIds]);
 
   return (
     <div className="w-full overflow-x-auto">
       <div className="flex gap-4 py-4 w-max">
         {movies.map((movie) => (
-          <Link key={movie.id} href={`/movie/${movie.id}`}>
+          <Link key={`movie-${movie.id}`} href={`/movie/${movie.id}`}>
             <img
               src={movie.poster_path 
                 ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`

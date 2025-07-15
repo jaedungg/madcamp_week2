@@ -5,7 +5,7 @@ import RoundButton from '@/app/components/RoundButton';
 import { useParams, useRouter, redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import { getMovieDetails, getMovieCredits } from '../../../../lib/api'; // adjust path if needed
+import { getMovieDetails, getMovieCredits,updateUserProfile, getMyProfile } from '../../../../lib/api'; // adjust path if needed
 
 const MovieDetailPage = () => {
   const params = useParams();
@@ -13,6 +13,7 @@ const MovieDetailPage = () => {
   const id = Array.isArray(rawId) ? rawId[0] : rawId ?? 'unknown';
 
   const router = useRouter();
+  const { data: session } = useSession();
   const [showSummarySteps, setShowSummarySteps] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
@@ -39,6 +40,7 @@ const MovieDetailPage = () => {
     };
     fetchCredits();
   }, [id]);
+  
 
   const handleSelectStep = (step: number) => {
     setSelectedStep(step);
@@ -92,22 +94,6 @@ const MovieDetailPage = () => {
               </p>
               <p className="text-2xl font-medium text-left text-white">
                 {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '장르 정보 없음'}
-              </p>
-            </div>
-            <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
-              <p className="flex-grow-0 flex-shrink-0 text-2xl font-medium text-left text-[#aaa]">
-                영화 특징:{" "}
-              </p>
-              <p className="text-2xl font-medium text-left text-white">
-                상상의 나래, 어두운, 흥미진진
-              </p>
-            </div>
-            <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
-              <p className="flex-grow-0 flex-shrink-0 text-2xl font-medium text-left text-[#aaa]">
-                관람 등급:{" "}
-              </p>
-              <p className="text-2xl font-medium text-left text-white">
-                15세이상관람가, 폭력성, 주제, 공포{" "}
               </p>
             </div>
           </div>
@@ -167,8 +153,20 @@ const MovieDetailPage = () => {
         <RectangleButton
           icon="comics"
           text="요약 만화 보기"
-          onClick={() => {
-            if (selectedStepId !== null) {
+          onClick={async () => {
+            if (selectedStepId !== null && id !== 'unknown' && session?.user?.id) {
+              try {
+                const profile = await getMyProfile(session.user.id);
+                console.log("✅ 현재 사용자 프로필:", profile);
+                const prevIds = profile.recentMovies ?? [];
+                const filteredIds = prevIds.filter((mid: string) => mid !== id);
+                const newIds = [id, ...filteredIds];
+                const trimmed = newIds.slice(0, 10);
+                console.log("📌 업데이트할 recentMovies:", trimmed);
+                await updateUserProfile(session.user.id, { recentMovies: trimmed });
+              } catch (error) {
+                console.error("최근 본 영화 업데이트 실패:", error);
+              }
               router.push(`/comic/${id}?step=${selectedStepId}`);
             }
           }}
