@@ -4,7 +4,7 @@ import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import CommentModal from '../../components/Comments';
-import { getComments, addComment } from '../../../../lib/api'; // adjust path if needed
+import { getComments, addComment, deleteComment } from '../../../../lib/api'; // adjust path if needed
 
 
 export default function ComicPage() {
@@ -28,9 +28,6 @@ export default function ComicPage() {
     if (Number(id)) fetchComments();
   }, [id, step]);
 
-  // useEffect(() => {
-  //   console.log('Fetched comments:', fetchedComments);
-  // }, [fetchedComments]);
 
   useEffect(() => {
     const fetchScenes = async () => {
@@ -73,28 +70,6 @@ export default function ComicPage() {
     }
   }, [current, id, step, scenes, isClicked]);
 
-  // 댓글 상태 관리
-  const [comments, setComments] = useState([
-    {
-      _id: '1',
-      content: '정말 재미있게 봤어요!',
-      author: {
-        nickname: 'movieFan',
-        profileImage: '/images/profile1.png',
-      },
-      createdAt: new Date().toISOString(),
-    },
-    {
-      _id: '2',
-      content: '기대 이상이었네요.',
-      author: {
-        nickname: 'cinemaLover',
-        profileImage: '/images/profile2.png',
-      },
-      createdAt: new Date().toISOString(),
-    },
-  ]);
-
   const handleSendComment = async (newContent: string) => {
     const movieIdNum = Number(id);
     const stepNum = Number(step) || 1;
@@ -105,10 +80,22 @@ export default function ComicPage() {
     }
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    console.log("Deleting comment with ID:", commentId);
+    const movieIdNum = Number(id);
+    const stepNum = Number(step) || 1;
+    
+    const deleted = await deleteComment(movieIdNum, stepNum, commentId, session?.user?.id ?? 'unknown'); // 임시 author
+    if (deleted) {
+      const updated = await getComments(movieIdNum, stepNum);
+      setFetchedComments(updated);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen h-screen overflow-hidden bg-black mx-auto px-4">
       <audio ref={audioRef} />
-      <div className="flex justify-center items-center w-[54px] h-[54px] absolute left-2 top-0 gap-2.5 cursor-pointer z-10 hover:bg-white/20 transition-colors duration-200 group rounded-full" onClick={() => router.push(`/movie/${id}`)}>
+      <div className="flex justify-center items-center w-[54px] h-[54px] absolute left-2 top-2 gap-2.5 cursor-pointer z-10 hover:bg-white/20 transition-colors duration-200 group rounded-full" onClick={() => router.push(`/movie/${id}`)}>
         <svg
           width={54}
           height={54}
@@ -153,6 +140,7 @@ export default function ComicPage() {
         setCommentOpen={setCommentOpen}
         comments={fetchedComments}
         onSend={handleSendComment}
+        onDelete={handleDeleteComment}
       />
 
 
@@ -168,11 +156,19 @@ export default function ComicPage() {
 
         <div className="flex flex-col justify-center items-start gap-8 max-w-screen-md mx-auto">
           <div className="w-full flex relative justify-center max-w-screen-md overflow-hidden pb-4 rounded-xl">
-            <img
-              src={scenes[current]?.image}
-              className=" max-h-[60vh] object-cover rounded-xl"
-              alt="scene"
-            />
+            {scenes[current]?.image ? (
+              <img
+                src={scenes[current]?.image ?? '/images/background.png'}
+                className=" max-h-[60vh] object-cover rounded-xl"
+                alt="scene"
+              />
+            ) : (
+              <img
+                src={'/images/loading.png'}
+                className="h-[60vh] w-[60vh] object-cover opacity-40 rounded-xl"
+                alt="scene"
+              />
+            )}
             <div className="absolute bottom-[0px] left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-2">
               {[...Array(scenes.length)].map((_, i) => (
                 <svg
@@ -189,6 +185,7 @@ export default function ComicPage() {
                 </svg>
               ))}
             </div>
+            
           </div>
           <div className="w-full max-w-screen-md mt-4">
             <p className="text-2xl font-semibold text-left text-white">

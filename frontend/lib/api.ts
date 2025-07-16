@@ -115,3 +115,16 @@ export async function addComment(movieId: number, level: number, content: string
     return null;
   }
 }
+
+// delete comment
+export async function deleteComment(movieId: number, level: number, commentId: string, author: string) {
+  try {
+    const res = await axios.delete(`${BASE_URL}/api/comments/${movieId}/${level}/${commentId}`, {
+      data: { author },
+    });
+    return res.data;
+  } catch (err) {
+    console.error('댓글 등록 실패:', err);
+    return null;
+  }
+}
