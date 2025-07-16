@@ -26,6 +26,10 @@ export default function Home() {
   const [latestMovieIds, setLatestMovieIds] = useState<number[]>([]);
   const [recentViewedIds, setRecentViewedIds] = useState<number[]>([]);
 
+
+  useEffect(() => {
+    console.log(topRatedMovieIds);
+  }, [topRatedMovieIds]); 
   useEffect(() => {
     const scrollElement = scrollRef.current;
     if (!scrollElement) return;
@@ -56,7 +60,6 @@ export default function Home() {
   useEffect(() => {
     const fetchTopRated = async () => {
       const data = await fetchTopRatedMovies();
-      console.log("Top Rated Movies:", data.slice(0, 10));
       setTopRatedMovieIds(data.map((movie: any) => movie.id));
       
     };

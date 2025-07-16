@@ -62,7 +62,7 @@ const MovieDetailPage = () => {
             {movieData?.title ?? 'Loading...'}
           </p>
           <div className="flex flex-col self-stretch flex-grow-0 flex-shrink-0 gap-4">
-            {movieCredits && (
+            {movieCredits ? (
               <>
                 {movieCredits.crew
                   ?.filter((member: any) => member.job === 'Director')
@@ -87,6 +87,26 @@ const MovieDetailPage = () => {
                   </div>
                 )}
               </>
+            ) : (
+              <>
+                <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-7 relative gap-3">
+                  <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
+                    감독:{" "}
+                  </p>
+                  <p className="text-white">
+                    {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '...'}
+                  </p>
+                </div>
+                <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-7 relative gap-3">
+                  <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
+                    출연:{" "}
+                  </p>
+                  <p className="text-white">
+                    {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '...'}
+                  </p>
+                </div>
+              </>
+
             )}
             <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
               <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
@@ -101,7 +121,7 @@ const MovieDetailPage = () => {
                 개봉일:{" "}
               </p>
               <p className="text-white">
-                {movieData?.release_date ?? '개봉일 정보 없음'}
+                {movieData?.release_date ?? '...'}
               </p>
             </div>
           </div>

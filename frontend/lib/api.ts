@@ -122,7 +122,7 @@ export async function deleteComment(movieId: number, level: number, commentId: s
     const res = await axios.delete(`${BASE_URL}/api/comments/${movieId}/${level}/${commentId}`, {
       data: { author },
     });
-    return res.data;
+    return res.status == 204;
   } catch (err) {
     console.error('댓글 등록 실패:', err);
     return null;
