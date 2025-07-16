@@ -5,11 +5,16 @@ const addCommentToComic = async (req, res) => {
     const { movieId, level } = req.params;
     const { content, author } = req.body;
 
+    console.log('[POST] 댓글 요청:', { movieId, level, content, author });
+
     if (!content || typeof content !== 'string') {
       return res.status(400).json({ error: '댓글 내용은 문자열이어야 합니다.' });
     }
 
-    let commentDoc = await Comment.findOne({ movieId: Number(movieId), level: Number(level || 1) });
+    let commentDoc = await Comment.findOne({ 
+      movieId: Number(movieId), 
+      level: Number(level || 1) 
+    });
 
     if (!commentDoc) {
       commentDoc = new Comment({

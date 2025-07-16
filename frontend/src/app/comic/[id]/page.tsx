@@ -2,11 +2,13 @@
 
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
+import { useSession } from 'next-auth/react';
 import CommentModal from '../../components/Comments';
-import { getComments } from '../../../../lib/api'; // adjust path if needed
+import { getComments, addComment } from '../../../../lib/api'; // adjust path if needed
 
 
 export default function ComicPage() {
+  const { data: session } = useSession();
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -17,18 +19,18 @@ export default function ComicPage() {
   const [scenes, setScenes] = useState<{ image: string; title: string; description: string }[]>([]);
   const [fetchedComments, setFetchedComments] = useState([]);
 
-  useEffect(() => {
-    if (!id) return;
-    const fetch = async () => {
-      const data = await getComments(Number(id), Number(step) || 1);
-      setFetchedComments(data);
-    };
-    fetch();
-  }, [id, step]);
+  const fetchComments = async () => {
+    const data = await getComments(Number(id), Number(step) || 1);
+    setFetchedComments(data);
+  };
 
   useEffect(() => {
-    console.log('Fetched comments:', fetchedComments);
-  }, [fetchedComments]);
+    if (Number(id)) fetchComments();
+  }, [id, step]);
+
+  // useEffect(() => {
+  //   console.log('Fetched comments:', fetchedComments);
+  // }, [fetchedComments]);
 
   useEffect(() => {
     const fetchScenes = async () => {
@@ -93,24 +95,20 @@ export default function ComicPage() {
     },
   ]);
 
-  const handleSendComment = (newContent: string) => {
-    const newComment = {
-      _id: crypto.randomUUID(), // 또는 uuid() 사용
-      content: newContent,
-      author: {
-        nickname: 'you',
-        profileImage: '/images/profile-default.png',
-      },
-      createdAt: new Date().toISOString(),
-    };
-
-    setComments((prev) => [...prev, newComment]);
+  const handleSendComment = async (newContent: string) => {
+    const movieIdNum = Number(id);
+    const stepNum = Number(step) || 1;
+    
+    const added = await addComment(movieIdNum, stepNum, newContent, session?.user?.id ?? 'unknown'); // 임시 author
+    if (added) {
+      fetchComments(); // 등록 후 댓글 갱신
+    }
   };
 
   return (
     <div className="w-full min-h-screen h-screen overflow-hidden bg-black mx-auto px-4">
       <audio ref={audioRef} />
-      <div className="flex justify-center items-center w-[54px] h-[54px] absolute left-1 top-1 gap-2.5 cursor-pointer z-10 hover:bg-white/20 transition-colors duration-200 group rounded-full" onClick={() => router.push(`/movie/${id}`)}>
+      <div className="flex justify-center items-center w-[54px] h-[54px] absolute left-2 top-0 gap-2.5 cursor-pointer z-10 hover:bg-white/20 transition-colors duration-200 group rounded-full" onClick={() => router.push(`/movie/${id}`)}>
         <svg
           width={54}
           height={54}
@@ -130,7 +128,7 @@ export default function ComicPage() {
         className="flex flex-col absolute right-4 top-4 gap-2.5 z-10 "
       >
         <div
-          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-70 p-1"
+          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-70 transition duration-200 p-1"
           onClick={() => setIsClicked(!isClicked)}
         >
         {isClicked ? (
@@ -141,7 +139,7 @@ export default function ComicPage() {
         </div>
       
         <div
-          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-70 p-1"
+          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-70 transition duration-200 p-1"
           onClick={() => {
             setCommentOpen(true)
             console.log("Comment button clicked", commentOpen)}
@@ -161,9 +159,8 @@ export default function ComicPage() {
 
       <div className="w-full max-w-screen-lg mx-auto pt-16 relative h-full">
         {current > 0 && (
-          <div className="flex justify-center items-center w-[54px] h-[55px] absolute left-8 top-[calc(45%-27px)] hover:opacity-50 gap-2.5 cursor-pointer z-10" onClick={handlePrev}>
+          <div className="flex justify-center items-center bg-white/60 rounded-full hover:bg-white/40 transition duration-200 w-[54px] h-[55px] absolute left-8 top-[calc(45%-27px)] gap-2.5 cursor-pointer z-10" onClick={handlePrev}>
             <svg width={54} height={55} viewBox="0 0 54 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx={27} cy="27.5" r={27} fill="white" fillOpacity="0.6" />
               <path d="M31.9133 18.4667L30.145 16.7L20.5133 26.3283C20.3581 26.4826 20.2349 26.6661 20.1508 26.8681C20.0667 27.0702 20.0234 27.2869 20.0234 27.5058C20.0234 27.7247 20.0667 27.9414 20.1508 28.1435C20.2349 28.3456 20.3581 28.529 20.5133 28.6833L30.145 38.3167L31.9117 36.55L22.8717 27.5083L31.9133 18.4667Z" fill="black" />
             </svg>
           </div>
@@ -176,7 +173,7 @@ export default function ComicPage() {
               className=" max-h-[60vh] object-cover rounded-xl"
               alt="scene"
             />
-            <div className="absolute bottom-[4px] left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-2">
+            <div className="absolute bottom-[0px] left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-2">
               {[...Array(scenes.length)].map((_, i) => (
                 <svg
                   key={i}
@@ -204,9 +201,8 @@ export default function ComicPage() {
         </div>
 
         {current < totalScenes - 1 && (
-          <div className="flex justify-center items-center w-[54px] h-[55px] absolute right-8 top-[calc(45%-27px)] gap-2.5 cursor-pointer z-10" onClick={handleNext}>
+          <div className="flex justify-center items-center bg-white/60 rounded-full hover:bg-white/40 transition duration-200 w-[54px] h-[55px] absolute right-8 top-[calc(45%-27px)] gap-2.5 cursor-pointer z-10" onClick={handleNext}>
             <svg width={54} height={55} viewBox="0 0 54 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx={27} cy="27.5" r={27} fill="white" fillOpacity="0.6" />
               <path d="M22.0866 18.4667L23.855 16.7L33.4866 26.3283C33.6419 26.4826 33.7651 26.6661 33.8492 26.8681C33.9333 27.0702 33.9766 27.2869 33.9766 27.5058C33.9766 27.7247 33.9333 27.9414 33.8492 28.1435C33.7651 28.3456 33.6419 28.529 33.4866 28.6833L23.855 38.3167L22.0883 36.55L31.1283 27.5083L22.0866 18.4667Z" fill="black" />
             </svg>
           </div>

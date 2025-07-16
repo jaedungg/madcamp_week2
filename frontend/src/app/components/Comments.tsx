@@ -88,21 +88,31 @@ export default function CommentModal({ commentOpen, setCommentOpen, comments, on
 
           {/* ▼▼▼   댓글 입력 영역   ▼▼▼ */}
           <div className="mt-3 relative w-full max-w-md">
-            <input
-              type="text"
-              placeholder="Add a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              className="w-full px-4 pr-10 py-2 rounded-2xl text-black/70 text-sm bg-white/70 placeholder-gray-400 focus:outline-none drop-shadow-[0_3px_3px_rgba(0,0,0,0.5)]"
-            />
-            <button
-              onClick={handleSend}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 opacity-40 hover:opacity-70 transition"
-              aria-label="Send comment"
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const value = newComment.trim();
+                if (value) {
+                  onSend(value);
+                  setNewComment('');
+                }
+              }}
             >
-              <img src="/icons/send.svg" alt="send icon" className="w-6 h-6 mb-0.5 cursor-pointer" />
-            </button>
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="w-full px-4 pr-10 py-2 rounded-2xl text-white text-sm border border-white/70 placeholder-gray-400 focus:outline-none drop-shadow-[0_3px_3px_rgba(0,0,0,0.5)]"
+              />
+              <button
+                type='submit'
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 opacity-70 hover:opacity-100 transition"
+                aria-label="Send comment"
+              >
+                <img src="/icons/send.svg" alt="send icon" className="w-6 h-6 mb-0.5 cursor-pointer" />
+              </button> 
+            </form>
           </div>
           {/* ▲▲▲   댓글 입력 영역   ▲▲▲ */}
         </div>
