@@ -42,7 +42,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPopular = async () => {
       const data = await fetchPopularMovies();
-      setPopularMovies(data.slice(0, 10));
+      setPopularMovies(data.slice(2, 12));
     };
     fetchPopular();
   }, []);

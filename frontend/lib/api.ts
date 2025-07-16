@@ -89,3 +89,15 @@ export const generateTTS = async (
   );
   return response.data;
 };
+
+// comment
+export async function getComments(movieId: number, level: number = 1) {
+  try {
+    const res = await axios.get(`${BASE_URL}/api/comments/${movieId}/${level}`);
+
+    return res.data; // [{ content, author, createdAt, ... }, ...]
+  } catch (err) {
+    console.error('댓글 불러오기 실패:', err);
+    return [];
+  }
+}

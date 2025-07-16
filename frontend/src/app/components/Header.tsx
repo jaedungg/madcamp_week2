@@ -142,7 +142,7 @@ export default function Header() {
                   setSearchQuery(e.target.value);
                 }}
                 placeholder="검색어를 입력하세요"
-                className="px-2 border rounded"
+                className="px-2 py-1 border rounded"
               /> 
               {searchQuery && (
                 <div className="absolute top-12 right-0 z-50 scrollbar-hide h-[500px] overflow-y-auto">

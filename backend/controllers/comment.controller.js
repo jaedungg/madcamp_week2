@@ -40,7 +40,7 @@ const getCommentsByComicId = async (req, res) => {
     const commentDoc = await Comment.findOne({
       movieId: Number(movieId),
       level: Number(level || 1),
-    });
+    }).populate('comments.author', 'nickname name profileImage');
 
     if (!commentDoc) {
       return res.status(200).json([]); // 댓글 문서가 없어도 빈 배열 반환

@@ -7,7 +7,8 @@ interface CommentModalProps {
     _id: string;
     author: {
       profileImage?: string;
-      nickname: string;
+      nickname?: string;
+      name: string;
     };
     createdAt: string;
     content: string;
@@ -67,14 +68,14 @@ export default function CommentModal({ commentOpen, setCommentOpen, comments, on
                 className="flex flex-row p-4 max-w-[25vw] bg-white/70 rounded-xl mb-2 drop-shadow-[0_3px_3px_rgba(0,0,0,0.5)]"
               >
                 <img
-                  // src={comment.author.profileImage || '/images/banner.jpg'}
-                  src={'/images/banner.jpg'}
+                  src={comment.author.profileImage || '/images/profile.png'}
+                  // src={'/images/banner.jpg'}
                   alt={comment.author.nickname}
                   className="w-8 h-8 rounded-full object-cover"
                 />
-                <div className="flex flex-col ml-2">
+                <div className="flex flex-col ml-3">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-black">{comment.author.nickname}</span>
+                    <span className="font-semibold text-black">{comment.author.nickname || comment.author.name}</span>
                     <span className="text-sm text-black/40">
                       {new Date(comment.createdAt).toLocaleDateString()}
                     </span>

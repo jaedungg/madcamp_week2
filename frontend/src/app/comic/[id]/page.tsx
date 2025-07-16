@@ -3,6 +3,7 @@
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import CommentModal from '../../components/Comments';
+import { getComments } from '../../../../lib/api'; // adjust path if needed
 
 
 export default function ComicPage() {
@@ -14,11 +15,25 @@ export default function ComicPage() {
   const step = searchParams ? searchParams.get('step') : null;
 
   const [scenes, setScenes] = useState<{ image: string; title: string; description: string }[]>([]);
+  const [fetchedComments, setFetchedComments] = useState([]);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetch = async () => {
+      const data = await getComments(Number(id), Number(step) || 1);
+      setFetchedComments(data);
+    };
+    fetch();
+  }, [id, step]);
+
+  useEffect(() => {
+    console.log('Fetched comments:', fetchedComments);
+  }, [fetchedComments]);
 
   useEffect(() => {
     const fetchScenes = async () => {
       try {
-        const response = await fetch(`/data/${id}_${step}.json`);
+        const response = await fetch(`/data/${Number(id)}_${Number(step)}.json`);
         const data = await response.json();
         setScenes(data);
       } catch (error) {
@@ -44,7 +59,7 @@ export default function ComicPage() {
   useEffect(() => {
     if (!id || !step || scenes.length === 0) return;
 
-    const ttsPath = `/tts/${id}_${step}_${current + 1}.mp3`;
+    const ttsPath = `/tts/${Number(id)}_${Number(step)}_${current + 1}.mp3`;
 
     if (audioRef.current) {
       audioRef.current.pause();
@@ -138,7 +153,7 @@ export default function ComicPage() {
       <CommentModal
         commentOpen={commentOpen}
         setCommentOpen={setCommentOpen}
-        comments={comments}
+        comments={fetchedComments}
         onSend={handleSendComment}
       />
 
