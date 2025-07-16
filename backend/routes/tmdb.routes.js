@@ -123,6 +123,35 @@ router.get('/movie/upcoming', async (req, res) => {
 
 /**
  * @swagger
+ * /api/tmdb/movie/top_rated:
+ *   get:
+ *     summary: Get top-rated movies using TMDB API
+ *     tags: [TMDB]
+ *     responses:
+ *       200:
+ *         description: 상위권 영화 정보
+ *       401:
+ *         description: Unauthorized access to TMDB API
+ *       500:
+ *         description: TMDB API error
+ */
+router.get('/movie/top_rated', async (req, res) => {
+  try {
+    const movies = await tmdb.getTopRatedMovies();
+    if (!movies) {
+      return res.status(404).json({ error: '영화를 찾을 수 없습니다.' });
+    }
+    res.status(200).json(movies);
+  } catch (err) {
+    console.error('TMDB 상위원 영화 조회 오류:', err.message);
+    res.status(err.response?.status || 500).json({
+      error: err.response?.data?.status_message || 'TMDB API Error',
+    });
+  }
+});
+
+/**
+ * @swagger
  * /api/tmdb/movie/{movieId}:
  *   get:
  *     summary: Get movie details using TMDB API

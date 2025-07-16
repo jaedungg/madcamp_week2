@@ -115,4 +115,22 @@ async function getUpcomingMovies() {
   }
 }
 
-export default { searchMovies, getMovieDetails, getMovieCredits, getPopularMovies, getUpcomingMovies };
+// 영화 top10 조회
+async function getTopRatedMovies() {
+  console.log('TMDB 상위권 영화 조회');
+
+  try {
+    const res = await axios.get(`${BASE_URL}/movie/top_rated`, {
+      params: {
+        api_key: API_KEY,
+        language: 'ko-KR',
+      },
+    });
+    return res.data.results;
+  } catch (error) {
+    console.error('TMDB 상위권 영화 조회 오류:', error.message);
+    return null;
+  }
+}
+
+export default { searchMovies, getMovieDetails, getMovieCredits, getPopularMovies, getUpcomingMovies, getTopRatedMovies };

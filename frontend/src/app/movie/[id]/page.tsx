@@ -49,39 +49,39 @@ const MovieDetailPage = () => {
   };
 
   return (
-    <div className='flex flex-col pt-20 px-4'>
+    <div className='flex flex-col pt-20 px-6'>
       <div className='flex flex-row'>
         {/* Movie Poster */}
         <img
           src={movieData?.poster_path ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}` : '/images/movie_0.png'}
-          className="w-[397px] h-[565px] object-cover rounded object-contain"
+          className="h-[540px] object-cover rounded object-contain"
         />
         {/* Movie Details */}
-        <div className="flex flex-col justify-start items-start ml-8 gap-8 flex-1">
-          <p className="flex-grow-0 flex-shrink-0 text-[32px] font-semibold text-left text-white">
+        <div className="flex flex-col justify-start items-start text-[22px] ml-8 mr-26 gap-8 flex-1">
+          <p className="flex-grow-0 flex-shrink-0 text-3xl font-semibold text-left text-white">
             {movieData?.title ?? '영화 제목'}
           </p>
-          <div className="flex flex-col justify-start items-start self-stretch flex-grow-0 flex-shrink-0 gap-4">
+          <div className="flex flex-col self-stretch flex-grow-0 flex-shrink-0 gap-4">
             {movieCredits && (
               <>
                 {movieCredits.crew
                   ?.filter((member: any) => member.job === 'Director')
                   .map((member: any) => (
                     <div key={member.credit_id} className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
-                      <p className="flex-grow-0 flex-shrink-0 text-2xl font-medium text-left text-[#aaa]">
+                      <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
                         감독:
                       </p>
-                      <p className="text-2xl font-medium text-left text-white">
+                      <p className="text-white">
                         {member.name}
                       </p>
                     </div>
                   ))}
                 {Array.isArray(movieCredits.cast) && (
                   <div className="flex self-stretch gap-3">
-                    <p className="flex-shrink-0 text-2xl font-medium text-left text-[#aaa]">
+                    <p className="flex-shrink-0 text-[#aaa]">
                       출연:
                     </p>
-                    <p className="text-2xl font-medium text-left text-white break-words">
+                    <p className="text-white break-keep">
                       {movieCredits.cast.join(', ')}
                     </p>
                   </div>
@@ -89,67 +89,68 @@ const MovieDetailPage = () => {
               </>
             )}
             <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
-              <p className="flex-grow-0 flex-shrink-0 text-2xl font-medium text-left text-[#aaa]">
+              <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
                 장르:{" "}
               </p>
-              <p className="text-2xl font-medium text-left text-white">
+              <p className="text-white">
                 {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '장르 정보 없음'}
               </p>
             </div>
           </div>
-          <p className='self-stretch flex-grow-0 flex-shrink-0 s-[500px] text-2xl font-medium text-left text-white'>
+          <p className='self-stretch flex-grow-0 flex-shrink-0 text-white break-keep'>
               {movieData?.overview ?? '영화 설명을 불러오는 중입니다.'}
           </p>
         </div>    
       </div>
       
-      <div className="relative mt-2 h-[54px] mb-2">
-        <div
-          className="flex justify-center items-center h-[54px] w-fit gap-3 px-5 py-2.5 rounded bg-white/40 border-2 border-white/70 cursor-pointer"
-          onClick={() => setDropdownOpen((prev) => !prev)}
-        >
-          <p className="text-[26px] font-medium text-white">
-            {selectedStep === 1
-              ? '1단계 (5컷 만화)'
-              : selectedStep === 2
-              ? '2단계 (10컷 만화)'
-              : '요약 단계'}
-          </p>
-          <svg
-            width={20}
-            height={20}
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+
+      <div className='flex flex-row items-center gap-3 pt-4'>
+        <div className="relative mt-2 mb-2">
+          <div
+            className="flex justify-center items-center h-[48px] w-fit gap-3 px-5 py-2.5 rounded bg-white/40 border-2 border-white/70 cursor-pointer hover:bg-[rgb(146,146,146)] transition-colors duration-200"
+            onClick={() => setDropdownOpen((prev) => !prev)}
           >
-            {dropdownOpen ? (
-              <path d="M0.833344 17.5H19.1667L10 1.66667" fill="white" />
-            ) : (
-              <path d="M0.833344 2.5L19.1667 2.5L10 18.3333" fill="white" />
-            )}
-          </svg>
+            <p className="text-xl text-white">
+              {selectedStep === 1
+                ? '1단계 (5컷 만화)'
+                : selectedStep === 2
+                ? '2단계 (10컷 만화)'
+                : '요약 단계'}
+            </p>
+            <svg
+              width={20}
+              height={20}
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {dropdownOpen ? (
+                <path d="M0.833344 17.5H19.1667L10 1.66667" fill="white" />
+              ) : (
+                <path d="M0.833344 2.5L19.1667 2.5L10 18.3333" fill="white" />
+              )}
+            </svg>
+          </div>
+
+          {dropdownOpen && (
+            <div className="flex flex-col justify-center items-center w-[200px] h-[88px] absolute top-[52px] left-0 py-2.5 rounded border-2 border-white/70 z-50" style={{ backgroundColor: 'rgb(102, 102, 102)' }}>
+              <div className="w-full h-[44px] flex items-center justify-center cursor-pointer hover:bg-[rgb(146,146,146)] transition-colors duration-200" onClick={() => handleSelectStep(1)}>
+                <p className="text-xl font-medium text-center text-white">
+                  1단계{" "}
+                  <span className="text-xl font-medium text-white">(5컷 만화)</span>
+                </p>
+              </div>
+              <div className="w-full h-[44px] flex items-center justify-center cursor-pointer hover:bg-[rgb(146,146,146)] transition-colors duration-200" onClick={() => handleSelectStep(2)}>
+                <p className="text-xl font-medium text-center text-white">
+                  2단계{" "}
+                  <span className="text-xl font-medium text-white">(10컷 만화)</span>
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
-        {dropdownOpen && (
-          <div className="flex flex-col justify-center items-center w-[232px] h-[94px] absolute top-[60px] left-0 py-2.5 rounded border-2 border-white/70 z-50" style={{ backgroundColor: 'rgb(102, 102, 102)' }}>
-            <div className="w-full h-[47px] flex items-center justify-center cursor-pointer hover:bg-[rgb(146,146,146)] transition-colors duration-200" onClick={() => handleSelectStep(1)}>
-              <p className="text-[26px] font-medium text-center text-white">
-                1단계{" "}
-                <span className="text-xl font-medium text-white">(5컷 만화)</span>
-              </p>
-            </div>
-            <div className="w-full h-[47px] flex items-center justify-center cursor-pointer hover:bg-[rgb(146,146,146)] transition-colors duration-200" onClick={() => handleSelectStep(2)}>
-              <p className="text-[26px] font-medium text-center text-white">
-                2단계{" "}
-                <span className="text-xl font-medium text-white">(10컷 만화)</span>
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className='flex flex-row items-center gap-4 mb-4'>
         {/* <RectangleButton icon="headset" text="줄거리 듣기" />  <RectangleButton icon="information" text="상세 정보 보기" transparent={true} /> <RoundButton icon="information"/> */}
-        <RectangleButton icon="headset" text="줄거리 듣기" />
         <RectangleButton
           icon="comics"
           text="요약 만화 보기"

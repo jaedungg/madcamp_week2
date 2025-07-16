@@ -11,17 +11,21 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/comics/{comicId}/comments:
+ * /api/comments/{movieId}/{level}:
  *   post:
  *     summary: 댓글 생성
  *     tags: [Comments]
  *     parameters:
  *       - in: path
- *         name: comicId
+ *         name: movieId
  *         required: true
  *         schema:
- *           type: string
- *         description: 댓글을 달 만화의 ID
+ *           type: number
+ *       - in: path
+ *         name: level
+ *         required: true
+ *         schema:
+ *           type: number
  *     requestBody:
  *       required: true
  *       content:
@@ -47,62 +51,50 @@ const router = express.Router();
  *       500:
  *         description: 서버 오류
  */
-router.post('/:comicId/comments', commentController.addCommentToComic);
+router.post('/:movieId/:level', commentController.addCommentToComic);
 /**
  * @swagger
- * /api/comics/{comicId}/comments:
+ * /api/comments/{movieId}/{level}:
  *   get:
  *     summary: 만화의 댓글 목록 조회
  *     tags: [Comments]
  *     parameters:
  *       - in: path
- *         name: comicId
+ *         name: movieId
  *         required: true
  *         schema:
- *           type: string
- *         description: 조회할 만화 ID
+ *           type: number
+ *       - in: path
+ *         name: level
+ *         required: true
+ *         schema:
+ *           type: number
  *     responses:
  *       200:
  *         description: 해당 만화의 댓글 목록 반환
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                   content:
- *                     type: string
- *                   author:
- *                     type: object
- *                     properties:
- *                       nickname:
- *                         type: string
- *                       profileImage:
- *                         type: string
- *                   createdAt:
- *                     type: string
- *                     format: date-time
  *       404:
  *         description: 해당 만화를 찾을 수 없음
  *       500:
  *         description: 서버 오류
  */
-router.get('/:comicId/comments', commentController.getCommentsByComicId);
+router.get('/:movieId/:level', commentController.getCommentsByComicId);
 /**
  * @swagger
- * /api/comics/{comicId}/comments/{commentId}:
+ * /api/comments/{movieId}/{level}/{commentId}:
  *   put:
  *     summary: 댓글 수정
  *     tags: [Comments]
  *     parameters:
  *       - in: path
- *         name: comicId
+ *         name: movieId
  *         required: true
  *         schema:
- *           type: string
+ *           type: number
+ *       - in: path
+ *         name: level
+ *         required: true
+ *         schema:
+ *           type: number
  *       - in: path
  *         name: commentId
  *         required: true
@@ -115,8 +107,7 @@ router.get('/:comicId/comments', commentController.getCommentsByComicId);
  *           schema:
  *             type: object
  *             required:
- *               - content
- *               - author
+ *               - content, author
  *             properties:
  *               content:
  *                 type: string
@@ -134,19 +125,24 @@ router.get('/:comicId/comments', commentController.getCommentsByComicId);
  *       500:
  *         description: 서버 오류
  */
-router.put('/:comicId/comments/:commentId', commentController.updateComment);
+router.put('/:movieId/:level/:commentId', commentController.updateComment);
 /**
  * @swagger
- * /api/comics/{comicId}/comments/{commentId}:
+ * /api/comments/{movieId}/{level}/{commentId}:
  *   delete:
  *     summary: 댓글 삭제
  *     tags: [Comments]
  *     parameters:
  *       - in: path
- *         name: comicId
+ *         name: movieId
  *         required: true
  *         schema:
- *           type: string
+ *           type: number
+ *       - in: path
+ *         name: level
+ *         required: true
+ *         schema:
+ *           type: number
  *       - in: path
  *         name: commentId
  *         required: true
@@ -173,6 +169,6 @@ router.put('/:comicId/comments/:commentId', commentController.updateComment);
  *       500:
  *         description: 서버 오류
  */
-router.delete('/:comicId/comments/:commentId', commentController.deleteComment);
+router.delete('/:movieId/:level/:commentId', commentController.deleteComment);
 
 export default router;
