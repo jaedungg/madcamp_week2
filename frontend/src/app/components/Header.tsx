@@ -145,8 +145,8 @@ export default function Header() {
                 className="px-2 border rounded"
               /> 
               {searchQuery && (
-                <div className="absolute top-12 right-0 z-50 h-[500px] overflow-y-auto">
-                  <div className="flex flex-col justify-start items-start w-[275px] relative rounded-lg bg-black/[0.84]">
+                <div className="absolute top-12 right-0 z-50 scrollbar-hide h-[500px] overflow-y-auto">
+                  <div className="flex flex-col justify-start items-start w-[290px] relative rounded-lg bg-black/[0.84]">
                   {searchResults.map((movie, i) => (
                     <div 
                       key={i} 

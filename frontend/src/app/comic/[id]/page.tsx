@@ -95,7 +95,7 @@ export default function ComicPage() {
   return (
     <div className="w-full min-h-screen h-screen overflow-hidden bg-black mx-auto px-4">
       <audio ref={audioRef} />
-      <div className="flex justify-center items-center w-[54px] h-[54px] absolute left-1 top-1 gap-2.5 cursor-pointer z-10 hover:bg-white/30 transition-colors duration-200 group rounded-full" onClick={() => router.push(`/movie/${id}`)}>
+      <div className="flex justify-center items-center w-[54px] h-[54px] absolute left-1 top-1 gap-2.5 cursor-pointer z-10 hover:bg-white/20 transition-colors duration-200 group rounded-full" onClick={() => router.push(`/movie/${id}`)}>
         <svg
           width={54}
           height={54}
@@ -115,7 +115,7 @@ export default function ComicPage() {
         className="flex flex-col absolute right-4 top-4 gap-2.5 z-10 "
       >
         <div
-          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-50 p-1"
+          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-70 p-1"
           onClick={() => setIsClicked(!isClicked)}
         >
         {isClicked ? (
@@ -126,7 +126,7 @@ export default function ComicPage() {
         </div>
       
         <div
-          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-50 p-1"
+          className="flex h-12 w-12 items-center justify-center cursor-pointer rounded-full bg-white/40 p-2 hover:opacity-70 p-1"
           onClick={() => {
             setCommentOpen(true)
             console.log("Comment button clicked", commentOpen)}

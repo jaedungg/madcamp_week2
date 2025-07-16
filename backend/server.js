@@ -29,7 +29,7 @@ app.use('/api/users', userRoutes)
 // app.use('/api/movies', movieRoutes);
 app.use('/api/tmdb', tmdbRoutes);
 app.use('/api/comics', comicRoutes);
-app.use('/api/comics', commentRoutes);
+app.use('/api/comments', commentRoutes);
 app.use('/api/images', imagesRoutes);
 app.use('/api/tts', ttsRoutes);
 
