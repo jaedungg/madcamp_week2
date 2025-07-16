@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import KakaoProvider from "next-auth/providers/kakao"; // ✅ 추가
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export default NextAuth({
   providers: [
@@ -71,9 +72,31 @@ export default NextAuth({
         const db = client.db();
         const existingUser = await db.collection("users").findOne({ email: user.email });
 
-        if (!existingUser) {
-          console.log("✅✅✅ 신규 유저 로그인:", user.email);
-        } else {
+                if (existingUser) {
+          // Check if OAuth account is already linked
+          const alreadyLinked = await db.collection("accounts").findOne({
+            userId: new ObjectId(existingUser._id),
+            provider: account.provider,
+          });
+
+          if (!alreadyLinked) {
+            await db.collection("accounts").insertOne({
+              userId: new ObjectId(existingUser._id),
+              type: account.type,
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+              access_token: account.access_token,
+              refresh_token: account.refresh_token,
+              expires_at: account.expires_at,
+              scope: account.scope,
+              token_type: account.token_type,
+              id_token: account.id_token,
+              session_state: account.session_state,
+            });
+            console.log("🔗 OAuth 계정 연결 완료:", account.provider, user.email);
+          } else {
+            console.log("🔗 이미 연결된 OAuth 계정:", account.provider, user.email);
+          }
           console.log("✅✅✅ 기존 유저 로그인:", user.email);
         }
 
