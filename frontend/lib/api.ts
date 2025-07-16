@@ -79,3 +79,13 @@ export const fetchLatestMovies = async () => {
   if (!res.ok) throw new Error('Failed to fetch latest movies');
   return res.json();
 };
+
+export const generateTTS = async (
+  text: string
+) => {
+  const response = await axios.post(
+    `${BASE_URL}/api/tts`,
+    { text }
+  );
+  return response.data;
+};

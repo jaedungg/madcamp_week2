@@ -84,7 +84,7 @@ const router = express.Router();
 // POST /api/tts/{movieId}/{level}
 router.post("/:movieId/:level", ttsController.generateTTSSteps);
 
-// POST /api/tts/{movieId}/{level}/{step}
+// POST /api/tts
 router.post("/", ttsController.generateTTS);
 
 export default router;

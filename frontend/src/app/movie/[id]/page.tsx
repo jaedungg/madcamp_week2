@@ -155,10 +155,6 @@ const MovieDetailPage = () => {
           icon="comics"
           text="요약 만화 보기"
           onClick={async () => {
-            if (selectedStepId === null) {
-              alert("단계를 선택하세요");
-              return;
-            }
             if (selectedStepId !== null && id !== 'unknown' && session?.user?.id) {
               try {
                 const profile = await getMyProfile(session.user.id);
