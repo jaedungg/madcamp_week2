@@ -89,3 +89,42 @@ export const generateTTS = async (
   );
   return response.data;
 };
+
+// get comment
+export async function getComments(movieId: number, level: number = 1) {
+  try {
+    const res = await axios.get(`${BASE_URL}/api/comments/${movieId}/${level}`);
+
+    return res.data; // [{ content, author, createdAt, ... }, ...]
+  } catch (err) {
+    console.error('댓글 불러오기 실패:', err);
+    return [];
+  }
+}
+
+// add comment
+export async function addComment(movieId: number, level: number, content: string, author: string) {
+  try {
+    const res = await axios.post(`${BASE_URL}/api/comments/${movieId}/${level}`, {
+      content,
+      author,
+    });
+    return res.data;
+  } catch (err) {
+    console.error('댓글 등록 실패:', err);
+    return null;
+  }
+}
+
+// delete comment
+export async function deleteComment(movieId: number, level: number, commentId: string, author: string) {
+  try {
+    const res = await axios.delete(`${BASE_URL}/api/comments/${movieId}/${level}/${commentId}`, {
+      data: { author },
+    });
+    return res.data;
+  } catch (err) {
+    console.error('댓글 등록 실패:', err);
+    return null;
+  }
+}

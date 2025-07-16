@@ -32,9 +32,9 @@ export default function RootLayout({
     <html lang="en">
       <SessionProviderWrapper>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+          className={`${geistSans.variable} ${geistMono.variable} scrollbar-hide antialiased overflow-x-hidden`}
         >
-          <div className="flex flex-col w-full min-h-screen">
+          <div className="flex flex-col w-full min-h-screen scrollbar-hide bg-black">
             {showSlate && <SlateAnimation />}
             {showHeader && <Header />}
             {children}

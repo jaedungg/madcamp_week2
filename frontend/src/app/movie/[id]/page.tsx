@@ -53,13 +53,13 @@ const MovieDetailPage = () => {
       <div className='flex flex-row'>
         {/* Movie Poster */}
         <img
-          src={movieData?.poster_path ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}` : '/images/movie_0.png'}
-          className="h-[540px] object-cover rounded object-contain"
+          src={movieData?.poster_path ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}` : '/images/loading.png'}
+          className="h-[540px] w-[400px] object-cover rounded object-contain"
         />
         {/* Movie Details */}
         <div className="flex flex-col justify-start items-start text-[22px] ml-8 mr-26 gap-4 flex-1">
           <p className="flex-grow-0 flex-shrink-0 text-3xl font-semibold text-left text-white">
-            {movieData?.title ?? '영화 제목'}
+            {movieData?.title ?? 'Loading...'}
           </p>
           <div className="flex flex-col self-stretch flex-grow-0 flex-shrink-0 gap-4">
             {movieCredits && (
@@ -72,7 +72,7 @@ const MovieDetailPage = () => {
                         감독:
                       </p>
                       <p className="text-white">
-                        {member.name}
+                        {member.name ?? '...'}
                       </p>
                     </div>
                   ))}
@@ -81,17 +81,8 @@ const MovieDetailPage = () => {
                     <p className="flex-shrink-0 text-[#aaa]">
                       출연:
                     </p>
-                    <p
-                      className="text-white break-keep overflow-hidden"
-                      style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}
-                    >
-                      {movieCredits.cast.join(', ')}
+                    <p className="text-white break-keep">
+                      {movieCredits.cast.join(', ') ?? '...'}
                     </p>
                   </div>
                 )}
@@ -101,17 +92,8 @@ const MovieDetailPage = () => {
               <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
                 장르:{" "}
               </p>
-              <p
-                className="text-white overflow-hidden"
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '장르 정보 없음'}
+              <p className="text-white">
+                {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '...'}
               </p>
             </div>
             <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
