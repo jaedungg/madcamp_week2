@@ -57,7 +57,7 @@ const MovieDetailPage = () => {
           className="h-[540px] object-cover rounded object-contain"
         />
         {/* Movie Details */}
-        <div className="flex flex-col justify-start items-start text-[22px] ml-8 mr-26 gap-8 flex-1">
+        <div className="flex flex-col justify-start items-start text-[22px] ml-8 mr-26 gap-4 flex-1">
           <p className="flex-grow-0 flex-shrink-0 text-3xl font-semibold text-left text-white">
             {movieData?.title ?? '영화 제목'}
           </p>
@@ -81,7 +81,16 @@ const MovieDetailPage = () => {
                     <p className="flex-shrink-0 text-[#aaa]">
                       출연:
                     </p>
-                    <p className="text-white break-keep">
+                    <p
+                      className="text-white break-keep overflow-hidden"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
                       {movieCredits.cast.join(', ')}
                     </p>
                   </div>
@@ -92,8 +101,25 @@ const MovieDetailPage = () => {
               <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
                 장르:{" "}
               </p>
-              <p className="text-white">
+              <p
+                className="text-white overflow-hidden"
+                style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
                 {movieData?.genres?.map((g: any) => g.name).join(', ') ?? '장르 정보 없음'}
+              </p>
+            </div>
+            <div className="flex justify-start items-center self-stretch flex-grow-0 flex-shrink-0 h-6 relative gap-3">
+              <p className="flex-grow-0 flex-shrink-0 text-[#aaa]">
+                개봉일:{" "}
+              </p>
+              <p className="text-white">
+                {movieData?.release_date ?? '개봉일 정보 없음'}
               </p>
             </div>
           </div>

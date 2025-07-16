@@ -8,7 +8,7 @@ import MovieVerticalView from './components/MovieVerticalGallery';
 import UserProfile from './components/UserProfile';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { fetchTopRatedMovies, fetchPopularMovies,fetchLatestMovies,getMyProfile } from '../../lib/api';
+import { fetchTopRatedMovies, fetchPopularMovies,fetchLatestMovies,getMyProfile,getMovieDetails  } from '../../lib/api';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -19,6 +19,7 @@ export default function Home() {
   // 필요한 필드들 추가
 }
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
+  const [popularDetails, setPopularDetails] = useState<{ id: number; title: string }[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [topRatedMovieIds, setTopRatedMovieIds] = useState<number[]>([]);
@@ -42,7 +43,12 @@ export default function Home() {
   useEffect(() => {
     const fetchPopular = async () => {
       const data = await fetchPopularMovies();
-      setPopularMovies(data.slice(0, 10));
+      setPopularMovies(data.slice(2, 10));
+      // Fetch detailed info for each popular movie
+      const ids = data.slice(2, 10).map((m: any) => m.id);
+      Promise.all(ids.map((id: number) => getMovieDetails(id.toString())))
+        .then(details => setPopularDetails(details.map(d => ({ id: d.id, title: d.title }))))
+        .catch(err => console.error('영화 상세 불러오기 실패:', err));
     };
     fetchPopular();
   }, []);
@@ -120,12 +126,19 @@ export default function Home() {
       <div className='relative w-full h-[660px] mb-8'>
         <div ref={scrollRef} className="flex overflow-x-auto snap-x snap-mandatory w-full h-full scrollbar-hide">
           {popularMovies.map((movie) => (
-            <img
-              key={movie.id}
-              src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
-              alt={movie.title}
-              className="flex-shrink-0 w-full h-full object-cover snap-center"
-            />
+            <div key={movie.id} className="relative flex-shrink-0 w-full h-full">
+              <img
+                src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
+                alt={movie.title}
+                className="w-full h-full object-cover snap-center"
+              />
+              <div
+                className="absolute bottom-18 left-4 px-2 py-1 text-white text-4xl font-bold"
+                style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)' }}
+              >
+                {popularDetails.find(d => d.id === movie.id)?.title || movie.title}
+              </div>
+            </div>
           ))}
         </div>
         <div className='absolute bottom-0 left-2 flex items-center justify-center mx-4 my-4 gap-4'>
@@ -175,7 +188,7 @@ export default function Home() {
           <div className="flex flex-row items-center gap-2 \">
             <img src={"icons/heart.svg"} alt='finger heart' width={32} height={32} />
             <p className="left-[35px] top-0 text-2xl text-left font-bold text-white">
-              오늘의 TOP 10
+              오늘의 TOP 20
             </p>
           </div>
             <div className="overflow-x-auto scrollbar-hide">
